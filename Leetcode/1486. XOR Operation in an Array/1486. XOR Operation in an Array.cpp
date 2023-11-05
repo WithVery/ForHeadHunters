@@ -10,7 +10,7 @@ public:
         return result;
 */
 
-        // "fast" solution is about O(20)
+        // "fast" solution
         #define CACHE_SIZE (7)
         int cycleCache[CACHE_SIZE] = { -1,-1,-1,-1,-1,-1,-1 };
 
