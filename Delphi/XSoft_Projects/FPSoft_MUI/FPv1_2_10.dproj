@@ -1,0 +1,183 @@
+﻿	<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+		<PropertyGroup>
+			<ProjectGuid>{4DCD19A9-FD12-407E-9195-C688F9630636}</ProjectGuid>
+			<ProjectVersion>12.0</ProjectVersion>
+			<MainSource>FPv1_2_11.dpr</MainSource>
+			<Config Condition="'$(Config)'==''">Debug</Config>
+			<DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Config)'=='Release' or '$(Cfg_1)'!=''">
+			<Cfg_1>true</Cfg_1>
+			<CfgParent>Base</CfgParent>
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Config)'=='Debug' or '$(Cfg_2)'!=''">
+			<Cfg_2>true</Cfg_2>
+			<CfgParent>Base</CfgParent>
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Base)'!=''">
+			<DCC_UsePackage>vclx;vcl;dbrtl;Rave76VCL;bdertl;rtl;dbexpress;DbxCommonDriver;DataSnapIndy10ServerTransport;DataSnapProviderClient;DataSnapServer;DbxClientDriver;DBXInterBaseDriver;DBXMySQLDriver;vcldb;dbxcds;DBXSybaseASEDriver;DBXSybaseASADriver;DBXOracleDriver;DBXMSSQLDriver;DBXInformixDriver;DBXDb2Driver;dsnap;vclactnband;xmlrtl;vcldbx;dsnapcon;TeeUI;TeeDB;Tee;adortl;vclib;ibxpress;IndyCore;IndySystem;IndyProtocols;inet;intrawebdb_100_120;Intraweb_100_120;VclSmp;vclie;websnap;webdsnap;inetdbbde;inetdbxpress;soaprtl;vclribbon;EhLib120;EhLibDataDrivers120;tmsd2009;tmsexd2009;tmsxlsd2009;tmswizd2009;VirtualTreesD12;dxCoreD12;cxLibraryD12;dxmdsD12;dxDockingD12;cxEditorsD12;cxExtEditorsD12;dxLayoutControlcxEditAdaptersD12;dxLayoutControlD12;dxsbD12;dxComnD12;cxPageControlD12;dxNavBarD12;cxGridD12;cxPivotGridD12;cxPivotGridChartD12;cxPivotGridOLAPD12;cxSchedulerD12;cxSchedulerGridD12;dxFlowChartD12;dxorgcD12;dxdborD12;cxVerticalGridD12;cxSpreadSheetD12;dxBarD12;cxBarEditItemD12;dxRibbonD12;dxBarExtItemsD12;dxBarExtDBItemsD12;dxBarDBNavD12;dxdbtrD12;dxtrmdD12;cxTreeListD12;cxTreeListdxBarPopupMenuD12;dxPSCoreD12;dxPSLnksD12;vclshlctrls;dxPScxCommonD12;dxPScxExtCommonD12;dxPSTeeChartD12;dxPsPrVwAdvD12;dxPSdxOCLnkD12;dxPSdxLCLnkD12;dxPSdxFCLnkD12;dxPSdxDBTVLnkD12;dxPSdxDBOCLnkD12;dxPSDBTeeChartD12;dxPScxSSLnkD12;dxPScxScheduler3LnkD12;dxPScxPivotGrid2LnkD12;dxPScxPCProdD12;dxPScxGrid6LnkD12;dxPScxVGridLnkD12;dxPScxTL5LnkD12;dxSkinXmas2008BlueD12;dxSkinsCoreD12;dxSkinValentineD12;dxSkinStardustD12;dxSkinSilverD12;dxSkinsdxRibbonPainterD12;dxSkinsdxNavBar2PainterD12;dxSkinsdxLCPainterD12;dxSkinsdxDLPainterD12;dxSkinsdxBarPainterD12;dxSkinscxScheduler3PainterD12;dxSkinscxPCPainterD12;dxSkinOffice2007SilverD12;dxSkinOffice2007PinkD12;dxSkinOffice2007GreenD12;dxSkinOffice2007BlueD12;dxSkinOffice2007BlackD12;dxSkinMoneyTwinsD12;dxSkinMcSkinD12;dxSkinLondonLiquidSkyD12;dxSkinLiquidSkyD12;dxSkinLilianD12;dxSkiniMaginaryD12;dxSkinGlassOceansD12;dxSkinCoffeeD12;dxSkinSummer2008D12;dxSkinCaramelD12;dxSkinBlueD12;dxSkinBlackD12;dxSkinDarkSideD12;dxSkinPumpkinD12;dxSkinSpringTimeD12;dcldxSkinsCoreD12;dxSpellCheckerD12;ZComponent;ZDbc;ZPlain;ZCore;ZParseSql;quartz;acnt2009_R;DvdWeb</DCC_UsePackage>
+			<DCC_UnitAlias>WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;$(DCC_UnitAlias)</DCC_UnitAlias>
+			<DCC_DependencyCheckOutputName>FPv1_2_11.exe</DCC_DependencyCheckOutputName>
+			<DCC_ImageBase>00400000</DCC_ImageBase>
+			<DCC_Platform>x86</DCC_Platform>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Cfg_1)'!=''">
+			<DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
+			<DCC_Define>RELEASE;$(DCC_Define)</DCC_Define>
+			<DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
+			<DCC_DebugInformation>false</DCC_DebugInformation>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Cfg_2)'!=''">
+			<DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
+		</PropertyGroup>
+		<ItemGroup>
+			<DelphiCompile Include="FPv1_2_11.dpr">
+				<MainSource>MainSource</MainSource>
+			</DelphiCompile>
+			<DCCReference Include="GlobalVars.pas"/>
+			<DCCReference Include="MainFPWin.pas">
+				<Form>MainFPForm</Form>
+			</DCCReference>
+			<DCCReference Include="IncomeEnteringWindow.pas">
+				<Form>IncomeEnteringForm</Form>
+			</DCCReference>
+			<DCCReference Include="DebtorEditWindow.pas">
+				<Form>DebtorEditForm</Form>
+			</DCCReference>
+			<DCCReference Include="DebtingWindow.pas">
+				<Form>DebtingForm</Form>
+			</DCCReference>
+			<DCCReference Include="FundEditWindow.pas">
+				<Form>FundEditForm</Form>
+			</DCCReference>
+			<DCCReference Include="BalanceEnterWindow.pas">
+				<Form>BalanceEnterForm</Form>
+			</DCCReference>
+			<DCCReference Include="NewFPWindow.pas">
+				<Form>NewFPForm</Form>
+			</DCCReference>
+			<DCCReference Include="FPAllocWindow.pas">
+				<Form>FPAllocForm</Form>
+			</DCCReference>
+			<DCCReference Include="POWindow.pas">
+				<Form>POForm</Form>
+			</DCCReference>
+			<DCCReference Include="POApproveWindow.pas">
+				<Form>POApproveForm</Form>
+			</DCCReference>
+			<DCCReference Include="UsersWindow.pas">
+				<Form>UsersForm</Form>
+			</DCCReference>
+			<DCCReference Include="PwdChangeWindow.pas">
+				<Form>PwdChangeForm</Form>
+			</DCCReference>
+			<DCCReference Include="UserAccessWindow.pas">
+				<Form>UserAccessForm</Form>
+			</DCCReference>
+			<DCCReference Include="CreditingWindow.pas">
+				<Form>CreditingForm</Form>
+			</DCCReference>
+			<DCCReference Include="AssetTransferWindow.pas">
+				<Form>AssetTransferForm</Form>
+			</DCCReference>
+			<DCCReference Include="DisbWindow.pas">
+				<Form>DisbForm</Form>
+			</DCCReference>
+			<DCCReference Include="FPLoadingWindow.pas">
+				<Form>FPLoadingForm</Form>
+			</DCCReference>
+			<DCCReference Include="RevTransferWindow.pas">
+				<Form>RevTransferForm</Form>
+			</DCCReference>
+			<DCCReference Include="DebtClosingWindow.pas">
+				<Form>DebtClosingForm</Form>
+			</DCCReference>
+			<DCCReference Include="DebtListWindow.pas">
+				<Form>DebtListForm</Form>
+			</DCCReference>
+			<DCCReference Include="LoginWindow.pas">
+				<Form>LogInForm</Form>
+			</DCCReference>
+			<DCCReference Include="ErrorWindow.pas">
+				<Form>ErrorForm</Form>
+			</DCCReference>
+			<DCCReference Include="UserEditWindow.pas">
+				<Form>UserEditForm</Form>
+			</DCCReference>
+			<DCCReference Include="AssetVsFundsWindow.pas">
+				<Form>AssetVsFundsForm</Form>
+			</DCCReference>
+			<DCCReference Include="ImageViewerWindow.pas">
+				<Form>ImageViewerForm</Form>
+			</DCCReference>
+			<DCCReference Include="FPXMLBinding.pas"/>
+			<DCCReference Include="UpdateThread.pas"/>
+			<BuildConfiguration Include="Base">
+				<Key>Base</Key>
+			</BuildConfiguration>
+			<BuildConfiguration Include="Debug">
+				<Key>Cfg_2</Key>
+				<CfgParent>Base</CfgParent>
+			</BuildConfiguration>
+			<BuildConfiguration Include="Release">
+				<Key>Cfg_1</Key>
+				<CfgParent>Base</CfgParent>
+			</BuildConfiguration>
+		</ItemGroup>
+		<Import Project="$(BDS)\Bin\CodeGear.Delphi.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Delphi.Targets')"/>
+		<ProjectExtensions>
+			<Borland.Personality>Delphi.Personality.12</Borland.Personality>
+			<Borland.ProjectType/>
+			<BorlandProject>
+				<Delphi.Personality>
+					<Source>
+						<Source Name="MainSource">FPv1_2_11.dpr</Source>
+					</Source>
+					<Parameters>
+						<Parameters Name="UseLauncher">False</Parameters>
+						<Parameters Name="LoadAllSymbols">True</Parameters>
+						<Parameters Name="LoadUnspecifiedSymbols">False</Parameters>
+					</Parameters>
+					<VersionInfo>
+						<VersionInfo Name="IncludeVerInfo">True</VersionInfo>
+						<VersionInfo Name="AutoIncBuild">False</VersionInfo>
+						<VersionInfo Name="MajorVer">1</VersionInfo>
+						<VersionInfo Name="MinorVer">2</VersionInfo>
+						<VersionInfo Name="Release">4</VersionInfo>
+						<VersionInfo Name="Build">13</VersionInfo>
+						<VersionInfo Name="Debug">False</VersionInfo>
+						<VersionInfo Name="PreRelease">False</VersionInfo>
+						<VersionInfo Name="Special">False</VersionInfo>
+						<VersionInfo Name="Private">False</VersionInfo>
+						<VersionInfo Name="DLL">False</VersionInfo>
+						<VersionInfo Name="Locale">1049</VersionInfo>
+						<VersionInfo Name="CodePage">1251</VersionInfo>
+					</VersionInfo>
+					<VersionInfoKeys>
+						<VersionInfoKeys Name="CompanyName"/>
+						<VersionInfoKeys Name="FileDescription">Financial planning</VersionInfoKeys>
+						<VersionInfoKeys Name="FileVersion">1.2.4.13</VersionInfoKeys>
+						<VersionInfoKeys Name="InternalName"/>
+						<VersionInfoKeys Name="LegalCopyright"/>
+						<VersionInfoKeys Name="LegalTrademarks"/>
+						<VersionInfoKeys Name="OriginalFilename"/>
+						<VersionInfoKeys Name="ProductName"/>
+						<VersionInfoKeys Name="ProductVersion">1.0.0.0</VersionInfoKeys>
+						<VersionInfoKeys Name="Comments"/>
+					</VersionInfoKeys>
+					<Excluded_Packages>
+						<Excluded_Packages Name="$(BDS)\bin\bcboffice2k120.bpl">CodeGear C++Builder Office 2000 Servers Package</Excluded_Packages>
+						<Excluded_Packages Name="$(BDS)\bin\bcbofficexp120.bpl">CodeGear C++Builder Office XP Servers Package</Excluded_Packages>
+						<Excluded_Packages Name="$(BDS)\bin\dcloffice2k120.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+						<Excluded_Packages Name="$(BDS)\bin\dclofficexp120.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+					</Excluded_Packages>
+				</Delphi.Personality>
+			</BorlandProject>
+			<ProjectFileVersion>12</ProjectFileVersion>
+		</ProjectExtensions>
+	</Project>

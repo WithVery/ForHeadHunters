@@ -1,0 +1,379 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{8481C837-E6E7-476D-BEB5-A49EF311D4BB}</ProjectGuid>
+        <MainSource>FPv1_2_11.dpr</MainSource>
+        <Config Condition="'$(Config)'==''">Debug</Config>
+        <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
+        <ProjectVersion>18.1</ProjectVersion>
+        <FrameworkType>VCL</FrameworkType>
+        <Base>True</Base>
+        <Platform Condition="'$(Platform)'==''">Win32</Platform>
+        <TargetedPlatforms>1</TargetedPlatforms>
+        <AppType>Application</AppType>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Base)'=='true') or '$(Base_Win32)'!=''">
+        <Base_Win32>true</Base_Win32>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Release' or '$(Cfg_1)'!=''">
+        <Cfg_1>true</Cfg_1>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_1)'=='true') or '$(Cfg_1_Win32)'!=''">
+        <Cfg_1_Win32>true</Cfg_1_Win32>
+        <CfgParent>Cfg_1</CfgParent>
+        <Cfg_1>true</Cfg_1>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Debug' or '$(Cfg_2)'!=''">
+        <Cfg_2>true</Cfg_2>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_2)'=='true') or '$(Cfg_2_Win32)'!=''">
+        <Cfg_2_Win32>true</Cfg_2_Win32>
+        <CfgParent>Cfg_2</CfgParent>
+        <Cfg_2>true</Cfg_2>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Base)'!=''">
+        <VerInfo_Locale>1049</VerInfo_Locale>
+        <DCC_Namespace>Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;System;Xml;Data;Datasnap;Web;Soap;Winapi;System.Win;VCLTee;$(DCC_Namespace)</DCC_Namespace>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <VerInfo_Build>24</VerInfo_Build>
+        <SanitizedProjectName>FPv1_2_11</SanitizedProjectName>
+        <VerInfo_MinorVer>3</VerInfo_MinorVer>
+        <VerInfo_Keys>CompanyName=support@fpsoft.ru;FileDescription=Financial planning program;FileVersion=1.3.0.24;InternalName=;LegalCopyright=;LegalTrademarks=IP Vladimirov D.N.;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <DCC_UnitSearchPath>D:\1\BDS\RAD Studio\6.0\Bpl;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_OutputDRCFile>true</DCC_OutputDRCFile>
+        <BRCC_Defines>FPPROJ;$(BRCC_Defines)</BRCC_Defines>
+        <DCC_Define>THREADSDBGOUTPUT1;FPPROJ;$(DCC_Define)</DCC_Define>
+        <DCC_UsePackage>vclx;vcl;dbrtl;Rave76VCL;bdertl;rtl;dbexpress;DbxCommonDriver;DataSnapIndy10ServerTransport;DataSnapProviderClient;DataSnapServer;DbxClientDriver;DBXInterBaseDriver;DBXMySQLDriver;vcldb;dbxcds;DBXSybaseASEDriver;DBXSybaseASADriver;DBXOracleDriver;DBXMSSQLDriver;DBXInformixDriver;DBXDb2Driver;dsnap;vclactnband;xmlrtl;vcldbx;dsnapcon;TeeUI;TeeDB;Tee;adortl;vclib;ibxpress;IndyCore;IndySystem;IndyProtocols;inet;intrawebdb_100_120;Intraweb_100_120;VclSmp;vclie;websnap;webdsnap;inetdbbde;inetdbxpress;soaprtl;vclribbon;EhLib120;EhLibDataDrivers120;tmsd2009;tmsexd2009;tmsxlsd2009;tmswizd2009;VirtualTreesD12;dxCoreD12;cxLibraryD12;dxmdsD12;dxDockingD12;cxEditorsD12;cxExtEditorsD12;dxLayoutControlcxEditAdaptersD12;dxLayoutControlD12;dxsbD12;dxComnD12;cxPageControlD12;dxNavBarD12;cxGridD12;cxPivotGridD12;cxPivotGridChartD12;cxPivotGridOLAPD12;cxSchedulerD12;cxSchedulerGridD12;dxFlowChartD12;dxorgcD12;dxdborD12;cxVerticalGridD12;cxSpreadSheetD12;dxBarD12;cxBarEditItemD12;dxRibbonD12;dxBarExtItemsD12;dxBarExtDBItemsD12;dxBarDBNavD12;dxdbtrD12;dxtrmdD12;cxTreeListD12;cxTreeListdxBarPopupMenuD12;dxPSCoreD12;dxPSLnksD12;vclshlctrls;dxPScxCommonD12;dxPScxExtCommonD12;dxPSTeeChartD12;dxPsPrVwAdvD12;dxPSdxOCLnkD12;dxPSdxLCLnkD12;dxPSdxFCLnkD12;dxPSdxDBTVLnkD12;dxPSdxDBOCLnkD12;dxPSDBTeeChartD12;dxPScxSSLnkD12;dxPScxScheduler3LnkD12;dxPScxPivotGrid2LnkD12;dxPScxPCProdD12;dxPScxGrid6LnkD12;dxPScxVGridLnkD12;dxPScxTL5LnkD12;dxSkinXmas2008BlueD12;dxSkinsCoreD12;dxSkinValentineD12;dxSkinStardustD12;dxSkinSilverD12;dxSkinsdxRibbonPainterD12;dxSkinsdxNavBar2PainterD12;dxSkinsdxLCPainterD12;dxSkinsdxDLPainterD12;dxSkinsdxBarPainterD12;dxSkinscxScheduler3PainterD12;dxSkinscxPCPainterD12;dxSkinOffice2007SilverD12;dxSkinOffice2007PinkD12;dxSkinOffice2007GreenD12;dxSkinOffice2007BlueD12;dxSkinOffice2007BlackD12;dxSkinMoneyTwinsD12;dxSkinMcSkinD12;dxSkinLondonLiquidSkyD12;dxSkinLiquidSkyD12;dxSkinLilianD12;dxSkiniMaginaryD12;dxSkinGlassOceansD12;dxSkinCoffeeD12;dxSkinSummer2008D12;dxSkinCaramelD12;dxSkinBlueD12;dxSkinBlackD12;dxSkinDarkSideD12;dxSkinPumpkinD12;dxSkinSpringTimeD12;dcldxSkinsCoreD12;dxSpellCheckerD12;ZComponent;ZDbc;ZPlain;ZCore;ZParseSql;quartz;acnt2009_R;DvdWeb;$(DCC_UsePackage)</DCC_UsePackage>
+        <DCC_DependencyCheckOutputName>FPv1_2_11.exe</DCC_DependencyCheckOutputName>
+        <DCC_ImageBase>00400000</DCC_ImageBase>
+        <DCC_Platform>x86</DCC_Platform>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Base_Win32)'!=''">
+        <VerInfo_Build>25</VerInfo_Build>
+        <DCC_UnitSearchPath>e:\1\TMS_Pack_8.3.4.0;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <Debugger_DebugSourcePath>C:\VCL\TRichView\TRichView\Source;C:\1\Zeos\src\dbc\;D:\Zeos\src\dbc\;C:\D2009\ZEOS\src\dbc\;$(Debugger_DebugSourcePath)</Debugger_DebugSourcePath>
+        <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
+        <Icon_MainIcon>FPv1_2_11_Icon3.ico</Icon_MainIcon>
+        <DCC_Namespace>Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.3.0.25;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_1)'!=''">
+        <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
+        <DCC_Define>RELEASE;$(DCC_Define)</DCC_Define>
+        <DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
+        <DCC_DebugInformation>0</DCC_DebugInformation>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+        <VerInfo_Build>26</VerInfo_Build>
+        <Debugger_DebugSourcePath>D:\D10\ZEOS\src\component\;$(Debugger_DebugSourcePath)</Debugger_DebugSourcePath>
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.3.0.26;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
+        <AppEnableHighDPI>true</AppEnableHighDPI>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_2)'!=''">
+        <DCC_DebugInfoInExe>true</DCC_DebugInfoInExe>
+        <DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
+        <VerInfo_Build>26</VerInfo_Build>
+        <VerInfo_Locale>1033</VerInfo_Locale>
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.3.0.26;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.3.20;Comments=</VerInfo_Keys>
+        <Debugger_DebugSourcePath>E:\Zeos\src\component\;E:\Zeos\src\dbc\;D:\D10\ZEOS\src\component\;$(Debugger_DebugSourcePath)</Debugger_DebugSourcePath>
+        <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
+        <AppEnableHighDPI>true</AppEnableHighDPI>
+    </PropertyGroup>
+    <ItemGroup>
+        <DelphiCompile Include="$(MainSource)">
+            <MainSource>MainSource</MainSource>
+        </DelphiCompile>
+        <DCCReference Include="GlobalVars.pas"/>
+        <DCCReference Include="MainFPWin.pas">
+            <Form>MainFPForm</Form>
+        </DCCReference>
+        <DCCReference Include="IncomeEnteringWindow.pas">
+            <Form>IncomeEnteringForm</Form>
+        </DCCReference>
+        <DCCReference Include="DebtorEditWindow.pas">
+            <Form>DebtorEditForm</Form>
+        </DCCReference>
+        <DCCReference Include="DebtingWindow.pas">
+            <Form>DebtingForm</Form>
+        </DCCReference>
+        <DCCReference Include="FundEditWindow.pas">
+            <Form>FundEditForm</Form>
+        </DCCReference>
+        <DCCReference Include="BalanceEnterWindow.pas">
+            <Form>BalanceEnterForm</Form>
+        </DCCReference>
+        <DCCReference Include="NewFPWindow.pas">
+            <Form>NewFPForm</Form>
+        </DCCReference>
+        <DCCReference Include="FPAllocWindow.pas">
+            <Form>FPAllocForm</Form>
+        </DCCReference>
+        <DCCReference Include="POWindow.pas">
+            <Form>POForm</Form>
+        </DCCReference>
+        <DCCReference Include="POApproveWindow.pas">
+            <Form>POApproveForm</Form>
+        </DCCReference>
+        <DCCReference Include="UsersWindow.pas">
+            <Form>UsersForm</Form>
+        </DCCReference>
+        <DCCReference Include="PwdChangeWindow.pas">
+            <Form>PwdChangeForm</Form>
+        </DCCReference>
+        <DCCReference Include="UserAccessWindow.pas">
+            <Form>UserAccessForm</Form>
+        </DCCReference>
+        <DCCReference Include="CreditingWindow.pas">
+            <Form>CreditingForm</Form>
+        </DCCReference>
+        <DCCReference Include="AssetTransferWindow.pas">
+            <Form>AssetTransferForm</Form>
+        </DCCReference>
+        <DCCReference Include="DisbWindow.pas">
+            <Form>DisbForm</Form>
+        </DCCReference>
+        <DCCReference Include="FPLoadingWindow.pas">
+            <Form>FPLoadingForm</Form>
+        </DCCReference>
+        <DCCReference Include="DebtClosingWindow.pas">
+            <Form>DebtClosingForm</Form>
+        </DCCReference>
+        <DCCReference Include="DebtListWindow.pas">
+            <Form>DebtListForm</Form>
+        </DCCReference>
+        <DCCReference Include="LoginWindow.pas">
+            <Form>LogInForm</Form>
+        </DCCReference>
+        <DCCReference Include="ErrorWindow.pas">
+            <Form>ErrorForm</Form>
+        </DCCReference>
+        <DCCReference Include="UserEditWindow.pas">
+            <Form>UserEditForm</Form>
+        </DCCReference>
+        <DCCReference Include="AssetVsFundsWindow.pas">
+            <Form>AssetVsFundsForm</Form>
+        </DCCReference>
+        <DCCReference Include="FPXMLBinding.pas"/>
+        <DCCReference Include="UpdateThread.pas"/>
+        <DCCReference Include="IncomeSourcesWindow.pas">
+            <Form>IncomeSourcesForm</Form>
+        </DCCReference>
+        <DCCReference Include="IncomeSourceEditWindow.pas">
+            <Form>IncomeSourceEditForm</Form>
+        </DCCReference>
+        <DCCReference Include="IncSrcUpdateThread.pas"/>
+        <DCCReference Include="AttSaverThread.pas"/>
+        <DCCReference Include="LoginNameCheckThread.pas"/>
+        <DCCReference Include="UserOrgTransferWindow.pas">
+            <Form>UserOrgTransferForm</Form>
+        </DCCReference>
+        <DCCReference Include="AboutWindow.pas">
+            <Form>AboutBox</Form>
+        </DCCReference>
+        <DCCReference Include="NewOrgWizWelcomeWindow.pas">
+            <Form>NewOrgWizWelcomeForm</Form>
+        </DCCReference>
+        <DCCReference Include="NOWStep1Window.pas">
+            <Form>NOWStep1Form</Form>
+        </DCCReference>
+        <DCCReference Include="NOWStep2Window.pas">
+            <Form>NOWStep2Form</Form>
+        </DCCReference>
+        <DCCReference Include="FPFundsListWindow.pas">
+            <Form>FPFundsListForm</Form>
+        </DCCReference>
+        <DCCReference Include="FPLockerThread.pas"/>
+        <DCCReference Include="POLockerThread.pas"/>
+        <DCCReference Include="LoadingProgressWindow.pas">
+            <Form>LoadingProgressForm</Form>
+        </DCCReference>
+        <DCCReference Include="..\EncLibs\DECUtil.pas"/>
+        <DCCReference Include="..\EncLibs\CRC.pas"/>
+        <DCCReference Include="..\EncLibs\DECCipher.pas"/>
+        <DCCReference Include="..\EncLibs\DECData.pas"/>
+        <DCCReference Include="..\EncLibs\DECFmt.pas"/>
+        <DCCReference Include="..\EncLibs\DECHash.pas"/>
+        <DCCReference Include="AttLoaderThread.pas"/>
+        <DCCReference Include="PushToDBThread.pas"/>
+        <DCCReference Include="VTCustomEditor.pas"/>
+        <DCCReference Include="FundvsPOsWindow.pas">
+            <Form>FundvsPOsForm</Form>
+        </DCCReference>
+        <DCCReference Include="FPConstStrs.pas"/>
+        <DCCReference Include="TableDataWindow.pas">
+            <Form>TableDataForm</Form>
+        </DCCReference>
+        <DCCReference Include="AttRemoverThread.pas"/>
+        <DCCReference Include="IncPlanPrintPreviewWindow.pas">
+            <Form>IncPlanPrintPreviewForm</Form>
+        </DCCReference>
+        <DCCReference Include="FilterNumbersWindow.pas">
+            <Form>FilterNumbersForm</Form>
+        </DCCReference>
+        <DCCReference Include="FilterStringWindow.pas">
+            <Form>FilterStringForm</Form>
+        </DCCReference>
+        <DCCReference Include="FilterFloatsWindow.pas">
+            <Form>FilterFloatsForm</Form>
+        </DCCReference>
+        <DCCReference Include="FilterDatesWindow.pas">
+            <Form>FilterDatesForm</Form>
+        </DCCReference>
+        <DCCReference Include="POsExportToExcelWindow.pas">
+            <Form>POsExportToExcelForm</Form>
+        </DCCReference>
+        <DCCReference Include="FPUnsavedExitWindow.pas">
+            <Form>FPUnsavedExitForm</Form>
+        </DCCReference>
+        <DCCReference Include="IncomeCorrectionWindow.pas">
+            <Form>IncomeCorrectionForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="VTIncomeSourceCustomEditor.pas"/>
+        <DCCReference Include="VTIncomeEnteringCustomEditor.pas"/>
+        <DCCReference Include="PersonIncomeWindow.pas">
+            <Form>PersonIncomeForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="OrgDataWindow.pas">
+            <Form>OrgDataForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <None Include="defines.inc"/>
+        <None Include="FPv1_2_11.todo"/>
+        <BuildConfiguration Include="Debug">
+            <Key>Cfg_2</Key>
+            <CfgParent>Base</CfgParent>
+        </BuildConfiguration>
+        <BuildConfiguration Include="Base">
+            <Key>Base</Key>
+        </BuildConfiguration>
+        <BuildConfiguration Include="Release">
+            <Key>Cfg_1</Key>
+            <CfgParent>Base</CfgParent>
+        </BuildConfiguration>
+    </ItemGroup>
+    <Import Project="$(BDS)\Bin\CodeGear.Delphi.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Delphi.Targets')"/>
+    <ProjectExtensions>
+        <Borland.Personality>Delphi.Personality.12</Borland.Personality>
+        <Borland.ProjectType>VCLApplication</Borland.ProjectType>
+        <BorlandProject>
+            <Delphi.Personality>
+                <Source>
+                    <Source Name="MainSource">FPv1_2_11.dpr</Source>
+                </Source>
+                <Parameters>
+                    <Parameters Name="UseLauncher">False</Parameters>
+                    <Parameters Name="LoadAllSymbols">True</Parameters>
+                    <Parameters Name="LoadUnspecifiedSymbols">False</Parameters>
+                    <Parameters Name="DebugSourceDirs">C:\VCL\TRichView\TRichView\Source;C:\1\Zeos\src\dbc\;D:\Zeos\src\dbc\;C:\D2009\ZEOS\src\dbc\</Parameters>
+                </Parameters>
+                <VersionInfo>
+                    <VersionInfo Name="IncludeVerInfo">True</VersionInfo>
+                    <VersionInfo Name="AutoIncBuild">False</VersionInfo>
+                    <VersionInfo Name="MajorVer">1</VersionInfo>
+                    <VersionInfo Name="MinorVer">3</VersionInfo>
+                    <VersionInfo Name="Release">0</VersionInfo>
+                    <VersionInfo Name="Build">18</VersionInfo>
+                    <VersionInfo Name="Debug">False</VersionInfo>
+                    <VersionInfo Name="PreRelease">False</VersionInfo>
+                    <VersionInfo Name="Special">False</VersionInfo>
+                    <VersionInfo Name="Private">False</VersionInfo>
+                    <VersionInfo Name="DLL">False</VersionInfo>
+                    <VersionInfo Name="Locale">1049</VersionInfo>
+                    <VersionInfo Name="CodePage">1251</VersionInfo>
+                </VersionInfo>
+                <VersionInfoKeys>
+                    <VersionInfoKeys Name="CompanyName">support@fpsoft.ru</VersionInfoKeys>
+                    <VersionInfoKeys Name="FileDescription">Financial planning program</VersionInfoKeys>
+                    <VersionInfoKeys Name="FileVersion">1.3.0.18</VersionInfoKeys>
+                    <VersionInfoKeys Name="InternalName"/>
+                    <VersionInfoKeys Name="LegalCopyright"/>
+                    <VersionInfoKeys Name="LegalTrademarks">IP Vladimirov D.N.</VersionInfoKeys>
+                    <VersionInfoKeys Name="OriginalFilename"/>
+                    <VersionInfoKeys Name="ProductName"/>
+                    <VersionInfoKeys Name="ProductVersion">1.0.0.0</VersionInfoKeys>
+                    <VersionInfoKeys Name="Comments"/>
+                </VersionInfoKeys>
+                <Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVDBPkgD10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVDBPkgD10_Dsgn.bpl not found</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RichViewActionsD10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RichViewActionsD10_Dsgn.bpl not found</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RvHtmlD10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RvHtmlD10_Dsgn.bpl not found</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RvXmlD10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RvXmlD10_Dsgn.bpl not found</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RvRbD10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RvRbD10_Dsgn.bpl not found</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\cxRVEditorsD10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\cxRVEditorsD10_Dsgn.bpl not found</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVDXSpellPkgD10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVDXSpellPkgD10_Dsgn.bpl not found</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\rvHtmlViewImportD10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\rvHtmlViewImportD10_Dsgn.bpl not found</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\Addict3_RichView_D10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\Addict3_RichView_D10_Dsgn.bpl not found</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVHunSpellPkgD10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVHunSpellPkgD10_Dsgn.bpl not found</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVASpellPkgD10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVASpellPkgD10_Dsgn.bpl not found</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVIndyD10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVIndyD10_Dsgn.bpl not found</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVCleverComponentsOldD10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVCleverComponentsOldD10_Dsgn.bpl not found</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVCleverComponentsD10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVCleverComponentsD10_Dsgn.bpl not found</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVMathD10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVMathD10_Dsgn.bpl not found</Excluded_Packages>
+                </Excluded_Packages>
+                <Language>
+                    <Language Name="ProjectLang">$00000419</Language>
+                    <Language Name="ActiveLang">ENU</Language>
+                </Language>
+                <RDP_Source_Files>
+                    <RDP_Source_Files Name="Item0">MainFPWin.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item1">IncomeEnteringWindow.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item2">DebtorEditWindow.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item3">DebtingWindow.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item4">FundEditWindow.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item5">BalanceEnterWindow.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item6">NewFPWindow.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item7">FPAllocWindow.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item8">POWindow.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item9">POApproveWindow.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item10">UsersWindow.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item11">PwdChangeWindow.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item12">UserAccessWindow.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item13">CreditingWindow.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item14">AssetTransferWindow.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item15">DisbWindow.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item16">FPLoadingWindow.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item17">DebtClosingWindow.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item18">DebtListWindow.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item19">LoginWindow.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item20">ErrorWindow.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item21">UserEditWindow.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item22">AssetVsFundsWindow.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item23">ImageViewerWindow.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item24">IncomeSourcesWindow.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item25">IncomeSourceEditWindow.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item26">UserOrgTransferWindow.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item27">AboutWindow.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item28">NewOrgWizWelcomeWindow.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item29">NOWStep1Window.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item30">NOWStep2Window.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item31">FPFundsListWindow.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item32">LoadingProgressWindow.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item33">FundvsPOsWindow.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item34">FPv1_2_11.drc</RDP_Source_Files>
+                </RDP_Source_Files>
+            </Delphi.Personality>
+            <ModelSupport>False</ModelSupport>
+            <Platforms>
+                <Platform value="Win32">True</Platform>
+            </Platforms>
+        </BorlandProject>
+        <ProjectFileVersion>12</ProjectFileVersion>
+    </ProjectExtensions>
+    <Import Project="$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj" Condition="Exists('$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj')"/>
+</Project>

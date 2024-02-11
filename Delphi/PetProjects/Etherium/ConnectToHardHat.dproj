@@ -1,0 +1,148 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{380CD23E-D3CD-46CF-B6C4-86FC2AFB4618}</ProjectGuid>
+        <ProjectVersion>18.1</ProjectVersion>
+        <FrameworkType>VCL</FrameworkType>
+        <MainSource>ConnectToHardHat.dpr</MainSource>
+        <Base>True</Base>
+        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Platform Condition="'$(Platform)'==''">Win32</Platform>
+        <TargetedPlatforms>1</TargetedPlatforms>
+        <AppType>Application</AppType>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Base)'=='true') or '$(Base_Win32)'!=''">
+        <Base_Win32>true</Base_Win32>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Debug' or '$(Cfg_1)'!=''">
+        <Cfg_1>true</Cfg_1>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_1)'=='true') or '$(Cfg_1_Win32)'!=''">
+        <Cfg_1_Win32>true</Cfg_1_Win32>
+        <CfgParent>Cfg_1</CfgParent>
+        <Cfg_1>true</Cfg_1>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Release' or '$(Cfg_2)'!=''">
+        <Cfg_2>true</Cfg_2>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_2)'=='true') or '$(Cfg_2_Win32)'!=''">
+        <Cfg_2_Win32>true</Cfg_2_Win32>
+        <CfgParent>Cfg_2</CfgParent>
+        <Cfg_2>true</Cfg_2>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Base)'!=''">
+        <Icon_MainIcon>$(BDS)\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
+        <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
+        <SanitizedProjectName>ConnectToHardHat</SanitizedProjectName>
+        <DCC_DcuOutput>.\$(Platform)\$(Config)</DCC_DcuOutput>
+        <DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
+        <DCC_E>false</DCC_E>
+        <DCC_N>false</DCC_N>
+        <DCC_S>false</DCC_S>
+        <DCC_F>false</DCC_F>
+        <DCC_K>false</DCC_K>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Base_Win32)'!=''">
+        <DCC_UsePackage>ZComponent;fmxase;RVPkgD2010;vcl;TeeUI923;vclactnband;ZCore;tmsxlsdXE9;IndySystem;TeeDB923;tethering;svnui;tmswizdXE9;VirtualTreesR;vclimg;ZDbc;tmsexdXE9;vcltouch;vcldb;bindcompfmx;svn;soaprtl;DbxCommonDriver;fmx;fmxdae;xmlrtl;fmxobj;vclwinx;rtl;Tee923;CustomIPTransport;vcldsnap;IndyCore;vclx;ZParseSql;bindcomp;appanalytics;dsnap;ZPlain;bindcompvcl;vclribbon;VclSmp;AbbreviaVCL;acntDX10_R;vclie;bindengine;dbrtl;IndyProtocols;dklang;tmsdXE9;inet;$(DCC_UsePackage)</DCC_UsePackage>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <VerInfo_Locale>1033</VerInfo_Locale>
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
+        <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_1)'!=''">
+        <DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
+        <DCC_DebugDCUs>true</DCC_DebugDCUs>
+        <DCC_Optimize>false</DCC_Optimize>
+        <DCC_GenerateStackFrames>true</DCC_GenerateStackFrames>
+        <DCC_DebugInfoInExe>true</DCC_DebugInfoInExe>
+        <DCC_RemoteDebug>true</DCC_RemoteDebug>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+        <DCC_UnitSearchPath>e:\1\Etherium\DelphiBigNumbers\Source;E:\1\Etherium\delphereum;e:\1\Etherium\CryptoLib4Pascal\CryptoLib\src;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <BRCC_IncludePath>e:\1\Etherium\DelphiBigNumbers\Source;$(BRCC_IncludePath)</BRCC_IncludePath>
+        <VerInfo_Locale>1033</VerInfo_Locale>
+        <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <BRCC_Defines>VCL;$(BRCC_Defines)</BRCC_Defines>
+        <AppEnableHighDPI>true</AppEnableHighDPI>
+        <DCC_Define>VCL;$(DCC_Define)</DCC_Define>
+        <DCC_RemoteDebug>false</DCC_RemoteDebug>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_2)'!=''">
+        <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
+        <DCC_Define>RELEASE;$(DCC_Define)</DCC_Define>
+        <DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
+        <DCC_DebugInformation>0</DCC_DebugInformation>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
+        <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
+        <AppEnableHighDPI>true</AppEnableHighDPI>
+    </PropertyGroup>
+    <ItemGroup>
+        <DelphiCompile Include="$(MainSource)">
+            <MainSource>MainSource</MainSource>
+        </DelphiCompile>
+        <DCCReference Include="e:\1\Etherium\DelphiBigNumbers\Source\Velthuis.BigIntegers.pas"/>
+        <DCCReference Include="e:\1\Etherium\CryptoLib4Pascal\CryptoLib\src\Crypto\Parameters\ClpIESParameters.pas"/>
+        <DCCReference Include="e:\1\Etherium\CryptoLib4Pascal\CryptoLib\src\Interfaces\ClpICipherParameters.pas"/>
+        <DCCReference Include="HardHatConnect.pas">
+            <Form>Form1</Form>
+        </DCCReference>
+        <BuildConfiguration Include="Release">
+            <Key>Cfg_2</Key>
+            <CfgParent>Base</CfgParent>
+        </BuildConfiguration>
+        <BuildConfiguration Include="Base">
+            <Key>Base</Key>
+        </BuildConfiguration>
+        <BuildConfiguration Include="Debug">
+            <Key>Cfg_1</Key>
+            <CfgParent>Base</CfgParent>
+        </BuildConfiguration>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Delphi.Personality.12</Borland.Personality>
+        <Borland.ProjectType>Application</Borland.ProjectType>
+        <BorlandProject>
+            <Delphi.Personality>
+                <Source>
+                    <Source Name="MainSource">ConnectToHardHat.dpr</Source>
+                </Source>
+                <Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVDBPkgD10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVDBPkgD10_Dsgn.bpl not found</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RichViewActionsD10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RichViewActionsD10_Dsgn.bpl not found</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RvHtmlD10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RvHtmlD10_Dsgn.bpl not found</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RvXmlD10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RvXmlD10_Dsgn.bpl not found</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RvRbD10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RvRbD10_Dsgn.bpl not found</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\cxRVEditorsD10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\cxRVEditorsD10_Dsgn.bpl not found</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVDXSpellPkgD10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVDXSpellPkgD10_Dsgn.bpl not found</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\rvHtmlViewImportD10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\rvHtmlViewImportD10_Dsgn.bpl not found</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\Addict3_RichView_D10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\Addict3_RichView_D10_Dsgn.bpl not found</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVHunSpellPkgD10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVHunSpellPkgD10_Dsgn.bpl not found</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVASpellPkgD10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVASpellPkgD10_Dsgn.bpl not found</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVIndyD10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVIndyD10_Dsgn.bpl not found</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVCleverComponentsOldD10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVCleverComponentsOldD10_Dsgn.bpl not found</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVCleverComponentsD10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVCleverComponentsD10_Dsgn.bpl not found</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVMathD10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVMathD10_Dsgn.bpl not found</Excluded_Packages>
+                </Excluded_Packages>
+            </Delphi.Personality>
+            <Platforms>
+                <Platform value="Win32">True</Platform>
+            </Platforms>
+        </BorlandProject>
+        <ProjectFileVersion>12</ProjectFileVersion>
+    </ProjectExtensions>
+    <Import Project="$(BDS)\Bin\CodeGear.Delphi.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Delphi.Targets')"/>
+    <Import Project="$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj" Condition="Exists('$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj')"/>
+</Project>

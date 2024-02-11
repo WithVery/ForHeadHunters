@@ -1,0 +1,136 @@
+--ngx.log(ngx.ERR, ngx.var.arg_id)
+
+if (ngx.var.arg_id == nil) or (ngx.var.arg_id == "") then
+	ngx.say("UNDEF")
+	ngx.exit(200)
+end
+
+local sid = ngx.var.arg_id
+
+local t2s = require("scripts.t2settings");
+local t2u = require("scripts.t2utils");
+local t2s8 = require("scripts.t2utf8");
+
+-- local function read_file(path)
+	-- local file = io.open(path, "rb") -- r read mode and b binary mode
+	-- if not file then return nil end
+	-- local content = file:read "*a" -- *a or *all reads the whole file
+	-- file:close()
+	-- return content
+-- end
+
+-- connect to DB to match MD5 from the DB to <filename>.md5 value
+
+local dbsettings = require("scripts.t2settings");
+local mysql = require "resty.mysql"
+local db, err, errno, sqlstate, res, ok
+
+db = mysql:new()
+if db then
+	-- ngx.log(ngx.ERR, "ta2=>")
+	db:set_timeout(2000)
+	ok, err, errno, sqlstate = db:connect{
+		host     = dbsettings.MysqlHost,
+		port     = dbsettings.MysqlPort,
+		database = dbsettings.MysqlDBName,
+		user     = dbsettings.MysqlLogin,
+		password = dbsettings.MysqlPassword
+	}
+
+	if not ok then
+			ngx.log(ngx.ERR, "Unable to connect to database: ", err, ": ", errno, " ", sqlstate)
+			ngx.exit(500)
+	end
+	
+	if vals ~= "" then
+	
+		local query = "SET CHARSET cp1251"
+		res, err, errno, sqlstate = db:query(query)
+
+		if not res then
+				ngx.log(ngx.ERR, "Bad result: ", err, ": ", errno, ": ", sqlstate, ".")
+				return
+		end
+
+		-- local query = "SET CHARSET utf8"
+		-- res, err, errno, sqlstate = db:query(query)
+
+		-- if not res then
+				-- ngx.log(ngx.ERR, "Bad result: ", err, ": ", errno, ": ", sqlstate, ".")
+				-- return
+		-- end
+	end
+end
+
+
+--local lpath = t2s.RootDataFolder.."\\"..ngx.var.arg_c.."\\"..t2s.VideoClipsFolder.."\\"
+local lpath = t2s.RootDataFolder.."\\Stations\\"..sid.."\\"..t2s.VideoClipsFolder.."\\"
+local lclips = lpath.."*.*"
+--ngx.log(ngx.ERR, "lclips:=>", lclips)
+
+--for dir in io.popen([[dir "c:\Users\admin\Desktop\*.pdf" /b]]):lines() do
+local lcmd = "dir \""..lclips.."\" /b"
+-- ngx.log(ngx.ERR, "lcmd:=>", lcmd)
+--for dir in io.popen([[dir "c:\Users\admin\Desktop\*.pdf" /b]]):lines() do
+
+-- local cf = io.popen(lcmd);
+-- ngx.log(ngx.ERR, "cf:=>", type(cf))
+-- ngx.log(ngx.ERR, ":=>", cjson.decode(cf))
+
+local cft = {}
+local md5ok = 1
+local lud = "" -- last used of the clip
+
+local mf = assert(io.popen("echo|chcp 1251|"..lcmd, 'r'))
+local ou = mf:read('*all')
+mf:close()
+ 
+-- lines = {}
+-- for s in ou:gmatch("[^\r\n]+") do
+	-- table.insert(lines, s)
+-- end
+
+lines = t2u.strToLines(ou)
+
+for i = 1, #lines do	
+	--ngx.log(ngx.ERR, ii, "=>", lines[i])
+	--cftn[ii] = '{"n":"'..dir..'"}'
+	local fna = lines[i]
+	local filename = t2s8.toutf8(fna)
+	local ext = string.sub(filename, -4)
+	--ngx.log(ngx.ERR, "ext>", string.upper(ext))
+	if string.upper(ext) ~= ".MD5" then
+		md5ok = false
+
+		local md5f = lpath..fna..".md5"
+		-- ngx.log(ngx.ERR, "md5f>", md5f)
+		if t2u.file_exists(md5f) then 
+			local md5s = t2u.read_file(md5f)
+			md5s = string.sub(md5s, 1, 32)
+			-- ngx.log(ngx.ERR, "md5>", string.upper(md5s))
+			
+			-- pull md5 from DB
+			local sq = 'SELECT`md5`,`lastused`FROM`clips`WHERE`path`=%s LIMIT 1'
+			sq = string.format(sq, ngx.quote_sql_str(lpath..fna));
+			-- ngx.log(ngx.ERR, sq)
+			res, err, errno, sqlstate = db:query(sq)
+			if res and res[1] then
+				-- custom setup
+				local md5db = res[1]["md5"]
+				lud = res[1]["lastused"]
+				-- ngx.log(ngx.ERR, "md5db>", md5db)
+				md5ok = md5s == md5db
+			end
+			--md5ok = md5s
+		--else
+			--md5ok = 0
+		end
+		--cft[t2s8.toutf8(lines[i])] = md5ok
+		cft[t2s8.toutf8(lines[i])] = cjson.encode({md5 = md5ok, lu = lud})
+		--md5ok = 1 - md5ok
+		
+	end
+end
+
+--local cfj = cjson.encode(cft);
+ngx.say(cjson.encode(cft))

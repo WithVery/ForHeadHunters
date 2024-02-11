@@ -1,0 +1,92 @@
+object UserOrgTransferForm: TUserOrgTransferForm
+  Left = 0
+  Top = 0
+  BorderIcons = [biMinimize, biMaximize]
+  BorderStyle = bsDialog
+  Caption = 'UserOrgTransferForm'
+  ClientHeight = 181
+  ClientWidth = 467
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poScreenCenter
+  OnCreate = FormCreate
+  PixelsPerInch = 96
+  TextHeight = 13
+  object sPanel2: TsPanel
+    Left = 0
+    Top = 0
+    Width = 467
+    Height = 181
+    SkinData.SkinSection = 'PANEL'
+    Align = alClient
+    TabOrder = 0
+    object sPanel1: TsPanel
+      Left = 1
+      Top = 129
+      Width = 465
+      Height = 51
+      SkinData.SkinSection = 'PANEL'
+      Align = alBottom
+      TabOrder = 0
+      object SaveButton: TsButton
+        Left = 88
+        Top = 16
+        Width = 89
+        Height = 25
+        Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
+        Default = True
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentFont = False
+        TabOrder = 0
+        OnClick = SaveButtonClick
+        SkinData.SkinSection = 'BUTTON'
+      end
+      object CancelButton: TsButton
+        Left = 264
+        Top = 16
+        Width = 91
+        Height = 25
+        Caption = #1054#1090#1084#1077#1085#1072
+        ModalResult = 2
+        TabOrder = 1
+        SkinData.SkinSection = 'BUTTON'
+      end
+    end
+    object OrgsTree: TVirtualStringTree
+      AlignWithMargins = True
+      Left = 1
+      Top = 1
+      Width = 465
+      Height = 128
+      Margins.Left = 0
+      Margins.Top = 0
+      Margins.Right = 0
+      Margins.Bottom = 0
+      Align = alClient
+      ButtonStyle = bsTriangle
+      Header.AutoSizeIndex = 0
+      Header.DefaultHeight = 17
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Header.Height = 17
+      Header.MainColumn = -1
+      TabOrder = 1
+      TreeOptions.MiscOptions = [toAcceptOLEDrop, toCheckSupport, toFullRepaintOnResize, toInitOnSave, toToggleOnDblClick, toWheelPanning, toEditOnClick]
+      TreeOptions.SelectionOptions = [toFullRowSelect]
+      OnGetText = OrgsTreeGetText
+      Columns = <>
+    end
+  end
+end

@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2010.05.05 15:34:35.640.pas,C:\Documents and Settings\mityok\Мои документы\RAD Studio\Projects\Unit2.pas=D:\Work\Current Projects\FP\MainFPForm.pas</Transaction>
+    <Transaction>2010.05.05 15:34:35.640.dfm,C:\Documents and Settings\mityok\Мои документы\RAD Studio\Projects\Unit2.dfm=D:\Work\Current Projects\FP\MainFPForm.dfm</Transaction>
+    <Transaction>2010.05.05 15:34:38.765.dproj,C:\Documents and Settings\mityok\Мои документы\RAD Studio\Projects\Project2.dproj=D:\Work\Current Projects\FP\FP.dproj</Transaction>
+    <Transaction>2010.05.05 15:35:37.859.pas,D:\Work\Current Projects\FP\PassWord.pas=D:\Work\Current Projects\FP\LoginWindow.pas</Transaction>
+    <Transaction>2010.05.05 15:35:37.859.dfm,D:\Work\Current Projects\FP\PassWord.dfm=D:\Work\Current Projects\FP\LoginWindow.dfm</Transaction>
+    <Transaction>2010.05.05 17:21:36.562.pas,D:\Work\Current Projects\FP\MainFPForm.pas=</Transaction>
+    <Transaction>2010.05.05 17:21:36.562.dfm,D:\Work\Current Projects\FP\MainFPForm.dfm=</Transaction>
+    <Transaction>2010.05.05 17:22:33.312.pas,D:\Work\Current Projects\FP\Unit1.pas=D:\Work\Current Projects\FP\MainFPWin.pas</Transaction>
+    <Transaction>2010.05.05 17:22:33.312.dfm,D:\Work\Current Projects\FP\Unit1.dfm=D:\Work\Current Projects\FP\MainFPWin.dfm</Transaction>
+    <Transaction>2010.05.19 01:11:57.828.pas,D:\Work\Current Projects\FP\Unit1.pas=D:\Work\Current Projects\FP\IncomeEnteringWindow.pas</Transaction>
+    <Transaction>2010.05.19 01:11:57.828.dfm,D:\Work\Current Projects\FP\Unit1.dfm=D:\Work\Current Projects\FP\IncomeEnteringWindow.dfm</Transaction>
+    <Transaction>2010.05.19 01:58:39.937.pas,D:\Work\Current Projects\FP\Unit1.pas=D:\Work\Current Projects\FP\DebtorEditWindow.pas</Transaction>
+    <Transaction>2010.05.19 01:58:39.937.dfm,D:\Work\Current Projects\FP\Unit1.dfm=D:\Work\Current Projects\FP\DebtorEditWindow.dfm</Transaction>
+    <Transaction>2010.05.19 16:01:28.754.pas,D:\Work\Current Projects\FP\Unit1.pas=D:\Work\Current Projects\FP\DebtingCreditingWindow.pas</Transaction>
+    <Transaction>2010.05.19 16:01:28.754.dfm,D:\Work\Current Projects\FP\Unit1.dfm=D:\Work\Current Projects\FP\DebtingCreditingWindow.dfm</Transaction>
+    <Transaction>2010.05.19 18:03:08.785.pas,D:\Work\Current Projects\FP\Unit1.pas=D:\Work\Current Projects\FP\FundEditWindow.pas</Transaction>
+    <Transaction>2010.05.19 18:03:08.785.dfm,D:\Work\Current Projects\FP\Unit1.dfm=D:\Work\Current Projects\FP\FundEditWindow.dfm</Transaction>
+    <Transaction>2010.05.19 21:15:25.895.pas,D:\Work\Current Projects\FP\Unit1.pas=D:\Work\Current Projects\FP\BalanceEnterWindow.pas</Transaction>
+    <Transaction>2010.05.19 21:15:25.895.dfm,D:\Work\Current Projects\FP\Unit1.dfm=D:\Work\Current Projects\FP\BalanceEnterWindow.dfm</Transaction>
+    <Transaction>2010.06.01 16:11:32.125.pas,D:\Work\Current Projects\FP\Unit1.pas=D:\Work\Current Projects\FP\NewFPWindow.pas</Transaction>
+    <Transaction>2010.06.01 16:11:32.125.dfm,D:\Work\Current Projects\FP\Unit1.dfm=D:\Work\Current Projects\FP\NewFPWindow.dfm</Transaction>
+    <Transaction>2010.11.25 13:22:34.734.pas,D:\Work\FP\LoginWindow.pas=</Transaction>
+    <Transaction>2010.11.25 13:22:34.734.dfm,D:\Work\FP\LoginWindow.dfm=</Transaction>
+    <Transaction>2010.11.25 17:05:02.828.pas,D:\Work\FP\Unit1.pas=D:\Work\FP\FPAllocWindow.pas</Transaction>
+    <Transaction>2010.11.25 17:05:02.828.dfm,D:\Work\FP\Unit1.dfm=D:\Work\FP\FPAllocWindow.dfm</Transaction>
+    <Transaction>2010.11.25 21:34:39.015.pas,D:\Work\FP\Unit1.pas=D:\Work\FP\POWindow.pas</Transaction>
+    <Transaction>2010.11.25 21:34:39.015.dfm,D:\Work\FP\Unit1.dfm=D:\Work\FP\POWindow.dfm</Transaction>
+    <Transaction>2010.11.26 16:04:37.140.pas,D:\Work\FP\Unit1.pas=D:\Work\FP\POApproveWindow.pas</Transaction>
+    <Transaction>2010.11.26 16:04:37.171.dfm,D:\Work\FP\Unit1.dfm=D:\Work\FP\POApproveWindow.dfm</Transaction>
+    <Transaction>2010.11.27 14:30:36.750.pas,D:\Work\FP\Unit1.pas=D:\Work\FP\POInfoWindow.pas</Transaction>
+    <Transaction>2010.11.27 14:30:36.781.dfm,D:\Work\FP\Unit1.dfm=D:\Work\FP\POInfoWindow.dfm</Transaction>
+    <Transaction>2010.11.27 19:04:53.062.pas,D:\Work\FP\Unit1.pas=D:\Work\FP\UsersWindow.pas</Transaction>
+    <Transaction>2010.11.27 19:04:53.062.dfm,D:\Work\FP\Unit1.dfm=D:\Work\FP\UsersWindow.dfm</Transaction>
+    <Transaction>2010.11.27 20:34:01.812.pas,D:\Work\FP\Unit1.pas=D:\Work\FP\PwdChangeWindow.pas</Transaction>
+    <Transaction>2010.11.27 20:34:01.812.dfm,D:\Work\FP\Unit1.dfm=D:\Work\FP\PwdChangeWindow.dfm</Transaction>
+    <Transaction>2010.11.27 21:06:25.750.pas,D:\Work\FP\Unit1.pas=D:\Work\FP\UserAccessWindow.pas</Transaction>
+    <Transaction>2010.11.27 21:06:25.750.dfm,D:\Work\FP\Unit1.dfm=D:\Work\FP\UserAccessWindow.dfm</Transaction>
+    <Transaction>2010.11.29 13:30:05.953.pas,D:\Work\FP\DebtingCreditingWindow.pas=D:\Work\FP\DebtingWindow.pas</Transaction>
+    <Transaction>2010.11.29 13:30:05.968.dfm,D:\Work\FP\DebtingCreditingWindow.dfm=D:\Work\FP\DebtingWindow.dfm</Transaction>
+    <Transaction>2010.11.29 13:33:26.203.pas,D:\Work\FP\Unit1.pas=D:\Work\FP\CreditingWindow.pas</Transaction>
+    <Transaction>2010.11.29 13:33:26.203.dfm,D:\Work\FP\Unit1.dfm=D:\Work\FP\CreditingWindow.dfm</Transaction>
+    <Transaction>2010.11.30 20:36:01.312.pas,D:\Work\FP\Unit1.pas=D:\Work\FP\AssetTransferWindow.pas</Transaction>
+    <Transaction>2010.11.30 20:36:01.312.dfm,D:\Work\FP\Unit1.dfm=D:\Work\FP\AssetTransferWindow.dfm</Transaction>
+    <Transaction>2010.12.01 10:20:49.968.pas,D:\Work\FP\Unit1.pas=D:\Work\FP\DisbWindow.pas</Transaction>
+    <Transaction>2010.12.01 10:20:49.968.dfm,D:\Work\FP\Unit1.dfm=D:\Work\FP\DisbWindow.dfm</Transaction>
+    <Transaction>2010.12.17 21:00:49.609.pas,D:\Work\FP\Unit1.pas=D:\Work\FP\FPLoadingWindow.pas</Transaction>
+    <Transaction>2010.12.17 21:00:49.625.dfm,D:\Work\FP\Unit1.dfm=D:\Work\FP\FPLoadingWindow.dfm</Transaction>
+    <Transaction>2010.12.23 23:22:06.234.pas,D:\Work\FP\Unit1.pas=D:\Work\FP\TRevTransferWindow.pas</Transaction>
+    <Transaction>2010.12.23 23:22:06.250.dfm,D:\Work\FP\Unit1.dfm=D:\Work\FP\TRevTransferWindow.dfm</Transaction>
+    <Transaction>2010.12.23 23:30:32.359.pas,D:\Work\FP\TRevTransferWindow.pas=D:\Work\FP\RevTransferWindow.pas</Transaction>
+    <Transaction>2010.12.23 23:30:32.359.dfm,D:\Work\FP\TRevTransferWindow.dfm=D:\Work\FP\RevTransferWindow.dfm</Transaction>
+  </Transactions>
+</BorlandProject>

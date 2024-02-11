@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html><head>
+<style>table,th,td { border:1px solid rgb(255,255,255); border-collapse:collapse; font-family:"Helvetica";text-align: center;}</style>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script> 
+
+var flip=0;
+var allkeys;
+var xmlpost=null;
+var starters = ['','','',''];
+
+// see Tele2 .h - file for definitions
+var acBlockStartedWeb = 3;
+var acBlockStarted    = 8;
+var acStopPalyback    = 11;
+var acStopAnchorTriggered = 6;
+
+
+var signalGreen  = "#99FF99";
+var signalYellow = "#FFFFCC";
+var signalRed    = "#FF9999";
+
+var lastTimeChecked = new Date();
+var tdate = new Date();
+
+function PostChannelURL(url, channel, bodyvalue) {
+	//console.log(bodyvalue);
+	PostURL(url, channel + ' ' + bodyvalue);
+}
+
+function PostURL(url, bodyvalue) {
+	//console.log("url: " + url);
+	if (xmlpost == null) {
+		if (window.XMLHttpRequest) {
+			xmlpost = new XMLHttpRequest(); 
+		}
+		else{
+			xmlpost = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+	}
+	xmlpost.open("POST", url, false);
+	xmlpost.setRequestHeader("Content-Type", "text/plain");
+	xmlpost.send(bodyvalue);
+}
+
+var xmlhttp=null;
+
+function loadXMLDoc(url) {
+	//console.log(url);
+
+	if (xmlhttp==null) {
+		if (window.XMLHttpRequest) {
+			xmlhttp=new XMLHttpRequest();
+		}
+		else {
+			xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+		}
+	}
+	
+	xmlhttp.onreadystatechange = function() {
+	if ((xmlhttp.readyState == 4) && (xmlhttp.status==200)) { 
+  var arr = xmlhttp.response; 
+	//console.log(arr);
+	if(arr == null) return;
+	var channels = arr.chs;
+	if(channels) {
+		var jsonData = JSON.parse(channels);
+		for (var i = 0; i < jsonData.length; i++) {
+				var val = jsonData[i];
+				//console.log();
+				//console.log("id:" + val.id + ", title:" + val.title);
+				
+			 var sCh = document.getElementById("ch" + val.id + "title");
+			 if (sCh) {
+				 sCh.innerHTML = val.title; 
+			 }
+				
+		}
+	}
+	
+  var destkey = arr.id;
+  if (destkey) {
+	 var sStName = document.getElementById("stname" + destkey);
+	 if (sStName) {
+		if(arr.stname == null) {
+	   sStName.innerHTML = "(не определено)"; 
+		}
+		else {
+	   sStName.innerHTML = arr.stname; 
+		 }
+	 }
+
+	 var ggg2 = document.getElementById("fs" + destkey);
+	 if (ggg2) {
+		if(arr.stname == null) {
+			ggg2.innerHTML = ""; 
+		}
+		else {
+			ggg2.innerHTML = arr.fs + " свободно"; 
+		}
+	 }
+
+   var ggg = document.getElementById("status" + destkey);
+	 if (ggg) {
+		if (arr.p != "timeout") {
+			ggg.innerHTML="К скачиванию: "+arr.p+"Mb<br>ЦПУ:" + arr.CPU;
+			ggg.style.backgroundColor="#C0F0F0";
+			ggg.style.color="#000000";
+
+			for (j = 0; j < arr.s.length; j++) {
+				var ddd = document.getElementById("status" + (j + 1) + destkey);
+				if (ddd) {
+					ddd.innerHTML = arr.s[j];
+					//ddd.innerHTML = "1"; 
+					ddd.style.color = "#000000";
+					<!-- if (arr.s[j] == "0") -->
+						<!-- ddd.style.backgroundColor = "#C0F0F0"; -->
+					<!-- else -->
+						<!-- ddd.style.backgroundColor = "#00FF00"; -->
+					var pd = ddd.parentElement;
+					if (pd) {
+						if(arr.siglvl) {
+							if(arr.siglvl[j] == 100) {
+								pd.style.backgroundColor = signalGreen;
+							}
+							else if ((arr.siglvl[j] < 100) && (arr.siglvl[j] >= 50)) {
+								pd.style.backgroundColor = signalYellow;
+							}
+							else {
+								pd.style.backgroundColor = signalRed;
+							}
+						}
+						else {
+							pd.style.backgroundColor = signalRed;
+						}
+						//pd.innerHTML = "as";
+						//pd.style.backgroundColor = signalGreen
+					}
+				}
+				
+				var ddd2 = document.getElementById("time" + (j + 1) + destkey);
+				if (ddd2) {
+					ddd2.innerHTML = arr.tl[j]; 
+				}			
+				var ddd3 = document.getElementById("clip"+(j+1)+destkey);
+				if (ddd3) {
+					ddd3.innerHTML=arr.cp[j]; 
+				}			
+				var ddd4=document.getElementById("date"+(j+1)+destkey);
+				if (ddd4) {
+					var d=new Date();
+					d.setTime(1000 * Number(arr.tm[j]));
+					ddd4.innerHTML = d.toDateString(); 
+				}			
+			}
+		}
+		else {
+			ggg.style.backgroundColor="#FF0000";
+			ggg.style.color="#FFFFFF";
+			ggg.innerHTML="Нет связи " + arr.timeout.toFixed(0) + " сек.";
+
+			for (j = 0; j < 16; j++) {
+				var ddd = document.getElementById("status" + (j + 1) + destkey);
+				if (ddd) {
+					ddd.innerHTML = "timeout"; 
+					ddd.style.backgroundColor = "#FF0000";
+					ddd.style.color = "#FFFFFF";
+				}
+				else {
+					break;
+				}
+			}
+		}
+	 } 
+		
+		//console.log(arr);
+		if(arr.sd) {
+			//console.log(arr.sd);
+			var sdArr = JSON.parse(arr.sd)
+			//console.log(sdArr);
+			for (cnum in sdArr) {
+				var val = sdArr[cnum]; // channel #
+				var sdata = JSON.parse(val);
+				//console.log(val);
+				//console.log(val);
+					
+				for (sVar in sdata) {
+					noError = true;
+					var dVal = sdata[sVar]; // data for today/tomorrow schedules
+					var sres = JSON.parse(dVal);
+					var elKey = "sched" + cnum + sVar + destkey;
+					//console.log(elKey);
+					 var sEl = document.getElementById(elKey);
+					//console.log(sEl);
+					if (sEl) {
+						var text = ""
+						if(sVar == 0) {
+							text = "Сегодня: ";
+						}
+						else {
+							text = "Завтра: ";
+						}
+
+						if(sres.impres) {
+							//console.log(sres.impres);							
+							var resData = JSON.parse(sres.impres);
+							if(resData && (resData[0].et == 0)) {
+									//console.log(resData[0].et);
+									text = text + "OK";
+									sEl.style.backgroundColor = signalGreen;
+								}
+								else {
+									text = text + "Ошибка " + resData[0].inf;
+									sEl.style.backgroundColor = signalRed;
+								//}
+							}
+						}
+						else { // nodata about imported schedule
+							text = text + "Нет данных";
+							if(sVar == 0) { // it's emergency for today and warning for tomorrow
+								sEl.style.backgroundColor = signalRed;
+							}
+							else {
+								sEl.style.backgroundColor = signalYellow;
+							}
+						}
+						sEl.innerHTML = text;
+					}
+				}
+			}
+			
+		}
+	}
+} 
+};
+
+xmlhttp.open("GET",url,true); 
+xmlhttp.setRequestHeader("If-Modified-Since", "Thu, 1 Jan 1970 00:00:00 GMT"); 
+xmlhttp.setRequestHeader("Cache-Control", "no-cache"); 
+xmlhttp.responseType='json';
+xmlhttp.send("");  
+}
+ 
+function UpdateAllStatus() {
+  if (allkeys.length>0) {
+	//console.log(allkeys[flip % allkeys.length]);
+    loadXMLDoc('/getstatus?id=' + allkeys[flip % allkeys.length]); 
+		flip = flip + 1;
+  }
+}
+
+var xmlhttpsettings = null;
+
+function loadXMLSettings(url) {
+	if (xmlhttpsettings == null) {
+		if (window.XMLHttpRequest) {
+			xmlhttpsettings = new XMLHttpRequest();
+		}
+		else {
+			xmlhttpsettings = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+	}
+
+	xmlhttpsettings.onreadystatechange = function() {
+		if ((xmlhttpsettings.readyState == 4) && (xmlhttpsettings.status==200)) { 
+			var arr = xmlhttpsettings.response; 
+			//console.log(arr);
+			if(arr == null) return;
+			var channels = arr.chs;
+			
+			if (channels) {
+				var jsonData = JSON.parse(channels);
+				for (var i = 0; i < jsonData.length; i++) {
+					var val = jsonData[i];
+					//console.log("id:" + val.id + ", title:" + val.title);
+					var sCh = document.getElementById("ch" + val.id + "title");
+					if (sCh) {
+						//sCh.innerHTML = val.title; 
+						sCh.innerHTML = "<a href=\"/channel/?" + val.id + "\">" + val.title + "</a>"
+					}
+				}
+			}
+		} 
+	};
+
+	xmlhttpsettings.open("GET", url, true);
+	xmlhttpsettings.setRequestHeader("Cache-Control", "no-cache"); 
+	xmlhttpsettings.responseType='json';
+	xmlhttpsettings.send("");  
+}
+
+var xmlhttpstationdata = null;
+
+function loadStationInfo(url) {
+	if (xmlhttpstationdata == null) {
+		if (window.XMLHttpRequest) {
+			xmlhttpstationdata = new XMLHttpRequest();
+		}
+		else {
+			xmlhttpstationdata = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+	}
+
+	xmlhttpstationdata.onreadystatechange = function() {
+		if ((xmlhttpstationdata.readyState == 4) && (xmlhttpstationdata.status==200)) { 
+			var arr = xmlhttpstationdata.response; 
+			//console.log(arr);
+			for(Var in arr) {
+				var Val = arr[Var]
+				//console.log(Var);
+				//console.log(Val);
+				var jsonData = JSON.parse(Val);
+				//console.log(jsonData);
+				 var sStName = document.getElementById("stname" + Var);
+				 if (sStName) {
+					if(jsonData.name == null) {
+					 sStName.innerHTML = "(не определено)"; 
+					}
+					else {
+					 sStName.innerHTML = jsonData.name;
+					}
+				 }
+			}
+		} 
+	};
+
+	xmlhttpstationdata.open("GET", url, true);
+	xmlhttpstationdata.setRequestHeader("Cache-Control", "no-cache"); 
+	xmlhttpstationdata.responseType='json';
+	xmlhttpstationdata.send("");  
+}
+
+// pull all anchors for parsing (for "start anchor" button)
+var xmlAllAnchors = null;
+var allAnchors = []; // array of anchor for all channels
+function loadAllAnchors(url) {
+	if (xmlAllAnchors == null) {
+		if (window.XMLHttpRequest) {
+			xmlAllAnchors = new XMLHttpRequest();
+		}
+		else {
+			xmlAllAnchors = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+	}
+
+	xmlAllAnchors.onreadystatechange = function() {
+		//console.log("xmlAllAnchors" + xmlAllAnchors.readyState);
+		if ((xmlAllAnchors.readyState == 4) && (xmlAllAnchors.status==200)) {
+			allAnchors = [];
+			var arr = xmlAllAnchors.response;
+			if(arr == null) return;
+			for (j = 1; j <= 4; j++) {
+				var items = [];
+				//console.log(j);
+				var anchors = arr[j];
+				if (anchors) {
+					var jsonData = JSON.parse(anchors);
+					for (var i = 0; i < jsonData.length; i++) {
+						var item = [];
+						//item = jsonData[i].s_name;
+						item.name = jsonData[i].s_name;
+						var tm = jsonData[i].s_start.split('.');
+						item.start = tm[0];
+						
+						items[i] = item;
+					}
+				}
+				allAnchors[j] = items;
+			}
+			//console.log(allAnchors);
+		} 
+	};
+
+	xmlAllAnchors.open("GET", url, true);
+	xmlAllAnchors.setRequestHeader("Cache-Control", "no-cache"); 
+	xmlAllAnchors.responseType='json';
+	xmlAllAnchors.send("");  
+}
+
+// 
+function launchBlock(channel, moment, line) {
+	PostChannelURL('/sendchannelcmd?', channel, 'startplaybackfromtime ' + moment);
+}
+
+function launchBlockAtStation(key, channel, moment, line) {
+	PostURL('/sendcmd?id=' + key, channel + ' startplaybackfromtime ' + moment);
+}
+
+function switchLaunchButton(key, channel, moment) {
+	var id = key +"_"+ channel +"_"+ moment;
+	
+	var elBtn = document.getElementById(id);
+	if(elBtn) {
+		elBtn.disabled = !elBtn.disabled;
+	}
+}
+
+function loadLastEvents() {
+
+	//var lastTimeChecked = new Date();
+	
+	var lastmoment = lastTimeChecked.getFullYear() + ("0" + (lastTimeChecked.getMonth()+1)).slice(-2) + ("0" + lastTimeChecked.getDate()).slice(-2)  + ("0" + lastTimeChecked.getHours()).slice(-2) + ("0" + lastTimeChecked.getMinutes()).slice(-2)  + ("0" + lastTimeChecked.getSeconds()).slice(-2);
+	//console.log(lastmoment);
+	
+	lastTimeChecked = new Date();
+	//console.log(location.search);
+
+	loadLastEventsInfo('/gettriggeredblocks' + location.search + "&after=" + lastmoment);
+}
+
+var xmlEventsInfo = null;
+
+function loadLastEventsInfo(url) {
+	//console.log(url);
+	
+	if (xmlEventsInfo == null) {
+		if (window.XMLHttpRequest) {
+			xmlEventsInfo = new XMLHttpRequest();
+		}
+		else {
+			xmlEventsInfo = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+	}
+
+	xmlEventsInfo.onreadystatechange = function() {
+		//console.log("xmlAllAnchors" + xmlAllAnchors.readyState);
+		if ((xmlEventsInfo.readyState == 4) && (xmlEventsInfo.status==200)) {
+			
+			var arr = xmlEventsInfo.response;
+			if(arr == null) return;
+			//console.log(arr);
+			//return;
+			
+			for(chanNum in arr) {
+				var charr = arr[chanNum];
+				//console.log(chanNum);
+				//console.log(charr);
+				//console.log(barr.length);
+				
+				for(dKey in charr) {
+					var blocks = charr[dKey];
+					//allBlocks[chanNum] = [];
+					//console.log(blocks);
+					
+					var blockArr = JSON.parse(blocks)
+					//console.log(blockArr);
+					
+					if((blockArr != null) && (blockArr.length)) {
+						for (var i = 0; i < blockArr.length; i++) {
+							var block = blockArr[i];
+							//console.log(chanNum);
+							//console.log(dKey);
+							//console.log(block)
+							var logTime    = block.lt;
+							var schedTime  = block.st.substring(0, 8);
+							var actionCode = block.ac;
+							
+							if((actionCode == acBlockStarted) || (actionCode == acBlockStartedWeb)) {
+								// global cell
+								var marker = "d_" + chanNum + "_" + schedTime;
+								//console.log(marker);
+								var divEl = document.getElementById(marker);
+								if(divEl) {
+									divEl.style.fontWeight = "bold";
+									divEl.style.color = "green";
+								}
+								
+								// channel cell 
+								marker = "d_" + dKey +"_"+ chanNum+"_" + schedTime;
+								//console.log(marker);
+								divEl = document.getElementById(marker);
+								if(divEl) {
+									divEl.style.fontWeight = "bold";
+									divEl.style.color = "green";
+								}
+							}
+							else if ((actionCode == acStopPalyback) || (actionCode == acStopAnchorTriggered)) { // clear all blocks
+								// global cell
+								var marker = "ch"+ chanNum + "allblocks";
+								//console.log(marker);
+								var divEl = document.getElementById(marker);
+								if(divEl) {
+									var c = divEl.childNodes;
+									for(var i=0;i<c.length;i++) {
+										//console.log(c[i]);
+										c[i].style.fontWeight = "normal";
+										c[i].style.color = "black";
+									}
+								}
+								
+								// station cell
+								marker = "b" + chanNum + "_"  + dKey;
+								//console.log(marker);
+								divEl = document.getElementById(marker);
+								if(divEl) {
+									var c = divEl.childNodes;
+									for(var i=0;i<c.length;i++) {
+										//console.log(c[i]);
+										c[i].style.fontWeight = "normal";
+										c[i].style.color = "black";
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		} 
+	};
+
+	xmlEventsInfo.open("GET", url, true);
+	xmlEventsInfo.setRequestHeader("Cache-Control", "no-cache"); 
+	xmlEventsInfo.responseType='json';
+	xmlEventsInfo.send("");  
+}
+
+// pull all anchors for parsing (for "start anchor" button)
+var xmlBlockInfo = null;
+var allBlocks = [];
+
+function loadBlocksInfo(url) {
+	//console.log(url);
+	if (xmlBlockInfo == null) {
+		if (window.XMLHttpRequest) {
+			xmlBlockInfo = new XMLHttpRequest();
+		}
+		else {
+			xmlBlockInfo = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+	}
+
+	xmlBlockInfo.onreadystatechange = function() {
+		//console.log("xmlAllAnchors" + xmlAllAnchors.readyState);
+		if ((xmlBlockInfo.readyState == 4) && (xmlBlockInfo.status==200)) {
+			
+			var arr = xmlBlockInfo.response;
+			if(arr == null) return;
+			//console.log(arr);
+			for (var i = 1; i < 4; i++) {
+				allBlocks[i] = [];
+			}
+			
+			for(dKey in arr) {
+				var charr = arr[dKey];
+				//console.log(dKey);
+				//console.log(charr);
+				//console.log(barr.length);
+				
+				for(chanNum in charr) {
+					var blocks = charr[chanNum];
+					//allBlocks[chanNum] = [];
+					//console.log(chanNum);
+					
+					var blockArr = JSON.parse(blocks)
+					//console.log(blockArr);
+					
+					if((blockArr != null) && (blockArr.length)) {
+						for (var i = 0; i < blockArr.length; i++) {
+							var block = blockArr[i];
+							var startTime = block.s_start.substring(0, 8);
+							var blockName = block.s_name.substring(0, 15);
+
+							// looking for time
+							var found = false
+							//console.log(allBlocks[chanNum].length);
+							for(var j = 0; j < allBlocks[chanNum].length; j++) {
+								//console.log(allBlocks[chanNum][j].time);
+								if(allBlocks[chanNum][j].time == startTime) {
+									found = true;
+									break;
+								}
+							}
+							if(!found) {
+								var anchorToAdd = {};
+								anchorToAdd["time"] = startTime;
+								anchorToAdd["name"] = blockName;
+								//console.log(startTime);
+								allBlocks[chanNum].push(anchorToAdd);
+							}
+						}
+					}
+				}
+			}
+
+			//console.log(allBlocks);
+			for (var i = 1; i < 4; i++) {
+				allBlocks[i].sort(function (a, b) {
+					var at = (parseInt(a.time.substring(0, 2), 10) * 60 + parseInt(a.time.substring(3, 5), 10)) * 60 + parseInt(a.time.substring(6, 8), 10);
+					var bt = (parseInt(b.time.substring(0, 2), 10) * 60 + parseInt(b.time.substring(3, 5), 10)) * 60 + parseInt(b.time.substring(6, 8), 10);
+					
+					if (at > bt) {
+						return 1;
+					}
+					if (at < bt) {
+						return -1;
+					}
+					return 0;
+				});
+			}
+			//console.log(allBlocks);
+			
+			// populate ALL ANCHORS cells
+			for (var i = 1; i < 4; i++) {
+				for(var k = 0; k < allBlocks[i].length; k++) {
+					var allBlockCell = document.getElementById("ch" + i + "allblocks");
+					if(allBlockCell) {
+						//var cell = elRow.cells[chanNum];
+						//console.log(cell);
+						var startBlockTime = allBlocks[i][k].time;
+						var startBlockName = allBlocks[i][k].name;
+						
+						var marker = i + "_" + startBlockTime;
+						var divBegin = "<div id=\"d_" + marker + "\">";
+						//console.log(divBegin);
+						
+						//allBlockCell.innerHTML = allBlockCell.innerHTML + "<div>" + startTime + ": " + blockName +
+						allBlockCell.innerHTML = allBlockCell.innerHTML + divBegin + startBlockTime + ": " + startBlockName +
+						"<input type=\"button\" value=\"Старт\" OnClick=\"launchBlock(" + i + ",'" + startBlockTime + "'," + "0" + ")\"></input></div>";
+					}
+				}
+			}
+			
+			// populate stations' block cells
+			//console.log(arr);
+			for(dKey in arr) {
+				var charr = arr[dKey];
+				//console.log(dKey);
+				//console.log(charr);
+				//console.log(barr.length);
+				
+				for(chanNum in charr) {
+					var blocks = charr[chanNum];
+					//allBlocks[chanNum] = [];
+					//console.log(chanNum);
+					//console.log(blocks);
+					
+					var blockArr = JSON.parse(blocks)
+					//console.log(blockArr);
+					
+					if((blockArr != null) && (blockArr.length)) {
+						for(var j = 0; j < allBlocks[chanNum].length; j++) {
+							//console.log(allBlocks[chanNum][j].time);
+							var curStartTime = allBlocks[chanNum][j].time.substring(0, 8);
+							var curBlockName = allBlocks[chanNum][j].name.substring(0, 15);
+							for (var i = 0; i < blockArr.length; i++) {
+								var block = blockArr[i];
+								var cst = block.s_start.substring(0, 8);
+								//console.log("startTime: " + cst);
+								
+								// looking for time
+								var found = false
+								//console.log(allBlocks[chanNum].length);
+								if(allBlocks[chanNum][j].time == cst) {
+									found = true;
+									break;
+								}
+							}
+							//console.log(found);
+							if(found) {
+							 // add full line
+								var elRow = document.getElementById(dKey);
+								if(elRow) {
+									var cell = elRow.cells[chanNum];
+
+									var marker = dKey +"_"+ chanNum+"_"+ curStartTime;
+									var divBegin = "<div id=\"d_" + marker + "\">";
+									//console.log(divBegin);
+									var disableCheckButton = "<input type=\"checkbox\" OnClick=switchLaunchButton(\"" + dKey +"\","+ chanNum+",\""+ curStartTime+"\") value=\"\">Игнор</input>"
+									var startButton = "<input type=\"button\" value=\"Старт\" id=\"" + marker + 
+									"\" OnClick=launchBlockAtStation(\"" + dKey +"\","+ chanNum+",\""+ curStartTime+"\",0)></input>";
+									cell.innerHTML = cell.innerHTML + divBegin + curStartTime + ": " + curBlockName + disableCheckButton
+									 + startButton + "</div>";
+								}
+							}
+							else {
+							 // add empty line for this time
+								var elRow = document.getElementById(dKey);
+								if(elRow) {
+									var cell = elRow.cells[chanNum];
+									cell.innerHTML = cell.innerHTML + "<div>" + curStartTime + ": —</div>";
+								}
+							}
+						}
+					}
+				}
+			}
+		} 
+	};
+
+	xmlBlockInfo.open("GET", url, true);
+	xmlBlockInfo.setRequestHeader("Cache-Control", "no-cache"); 
+	xmlBlockInfo.responseType='json';
+	xmlBlockInfo.send("");  
+}
+
+function UpdateSettings() {
+	//console.log(location.search)
+  loadXMLSettings('/getsettings');
+	
+  loadStationInfo('/loadstationinfo/' + location.search);
+	var today = new Date();
+  loadBlocksInfo('/loadblocksinfo/' + location.search + '&date=' + today.getFullYear() + '-' + ("0" + (today.getMonth()+1)).slice(-2) + '-' + ("0" + today.getDate()).slice(-2));
+}
+
+function CloneCmdTable() {
+//	var element = document.getElementById("Stations");
+	
+	var elTbl = document.getElementById("cmdtbl");
+	var x = elTbl.rows.length;
+	var raw = elTbl.rows[x - 1];
+	//console.log("raw:" + raw.innerHTML);
+  var aa = raw.innerHTML;
+  var bb = "";
+	elTbl.deleteRow(x - 1);
+	
+  for (i = 0; i < allkeys.length; i++) {
+    var newrow = elTbl.insertRow(x - 1);
+    var cc = aa.replace(/KEYID/g, allkeys[i], 'g');
+		newrow.innerHTML = cc;
+		newrow.id = allkeys[i];
+		//console.log("newrow.id:" + newrow.id);
+		x = x +1;
+  }
+}
+
+function checkTime(i) {
+  if (i < 10) {
+    i = "0" + i;
+  }
+  return i;
+}
+
+function startTime() {
+  var today = new Date();
+  var h = today.getHours();
+  var m = today.getMinutes();
+  var s = today.getSeconds();
+	
+  t = setTimeout(function() { startTime() }, 500);
+}
+
+function initPage() {
+	lastTimeChecked = new Date();
+	
+	console.log(lastTimeChecked.toLocaleString());
+	
+	
+	//startTime();
+/*	
+	var dateControl = document.querySelector('input[type="date"]');
+	var dateControl = document.getElementById('curtime');
+	dateControl.value = new Date().toISOString().substring(0, 10);
+*/	
+}
+
+function OnLoad() { 
+  var cmd = location.search;
+  cmd = cmd.replace("?", "");
+  cmd = cmd.replace("id=", "");
+  allkeys = cmd.split(",");
+	
+	initPage();
+	
+  CloneCmdTable();
+	
+  //window.setInterval("UpdateAllStatus()", 1000 / (allkeys.length + 1));
+	UpdateSettings();
+	
+	loadLastEvents();
+	window.setInterval("loadLastEvents()", 1000);
+	
+  //window.setInterval("UpdateSettings()", 5000);
+}
+</script>
+</head>
+
+<body onload="OnLoad()">
+<form name="Form">
+<table id="cmdtbl" bgcolor="#C0F0F0">
+<tr>
+	<td>Каналы:</td>
+  <td width="350" id="ch1title">1</td>
+  <td id="ch2title">2</td>
+  <td id="ch3title">3</td>
+	<td id="ch4title">4</td>
+</tr>
+<tr>
+	<td></td>
+	<!-- <td><h1>ВСЕ ГОРОДА</h1></td>	 -->
+	<td>ВСЕ ГОРОДА</td>	
+	<td>ВСЕ ГОРОДА</td>	
+	<td>ВСЕ ГОРОДА</td>	
+	<td>ВСЕ ГОРОДА</td>	
+</tr>
+<tr>
+	<td>Блоки:</td>
+	<td id="ch1allblocks" style="text-align:left;"></td>
+	<td id="ch2allblocks" style="text-align:left;"></td>
+	<td id="ch3allblocks" style="text-align:left;"></td>
+	<td id="ch4allblocks" style="text-align:left;"></td>
+</tr>
+<tr id = "Stations">
+	<td colspan=5>Станции</td>
+</tr>
+<tr id="KEYID">
+	<td style="text-align:left;">
+		<span id="stnameKEYID">?????</span><br>
+		KEYID<br>
+		<!-- <span id="statusKEYID">?????</span><br> -->
+		<!-- <span id="fsKEYID">?????</span> -->
+	</td>
+  <td id="b1_KEYID" style="text-align:left;"></td>
+  <td id="b2_KEYID" style="text-align:left;"></td>
+  <td id="b3_KEYID" style="text-align:left;"></td>
+  <td id="b4_KEYID" style="text-align:left;"></td>
+</tr>
+</table>
+</form>
+</body>
+</html>

@@ -1,0 +1,99 @@
+object TableDataForm: TTableDataForm
+  Left = 0
+  Top = 0
+  BorderStyle = bsToolWindow
+  Caption = #1042#1089#1090#1072#1074#1080#1090#1100' '#1090#1072#1073#1083#1080#1094#1091
+  ClientHeight = 123
+  ClientWidth = 183
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  OnKeyPress = FormKeyPress
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Panel: TsPanel
+    Left = 0
+    Top = 0
+    Width = 183
+    Height = 123
+    Align = alClient
+    TabOrder = 0
+    SkinData.SkinSection = 'PANEL'
+    ExplicitLeft = 40
+    ExplicitTop = 56
+    ExplicitWidth = 185
+    ExplicitHeight = 41
+    object lblRows: TsLabel
+      Left = 20
+      Top = 52
+      Width = 35
+      Height = 13
+      Caption = #1057#1090#1088#1086#1082':'
+      ParentFont = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+    end
+    object lblColumns: TsLabel
+      Left = 20
+      Top = 16
+      Width = 53
+      Height = 13
+      Caption = #1057#1090#1086#1083#1073#1094#1086#1074':'
+      ParentFont = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+    end
+    object spnColumns: TSpinEdit
+      Left = 104
+      Top = 13
+      Width = 49
+      Height = 22
+      MaxValue = 6
+      MinValue = 1
+      TabOrder = 0
+      Value = 3
+    end
+    object spnRows: TSpinEdit
+      Left = 104
+      Top = 49
+      Width = 49
+      Height = 22
+      MaxValue = 15
+      MinValue = 1
+      TabOrder = 1
+      Value = 3
+    end
+    object btnOk: TsButton
+      Left = 20
+      Top = 88
+      Width = 45
+      Height = 25
+      Caption = #1054#1082
+      Default = True
+      ModalResult = 1
+      TabOrder = 2
+      SkinData.SkinSection = 'BUTTON'
+    end
+    object btnCancel: TsButton
+      Left = 96
+      Top = 88
+      Width = 75
+      Height = 25
+      Caption = #1054#1090#1084#1077#1085#1072
+      ModalResult = 2
+      TabOrder = 3
+      SkinData.SkinSection = 'BUTTON'
+    end
+  end
+end

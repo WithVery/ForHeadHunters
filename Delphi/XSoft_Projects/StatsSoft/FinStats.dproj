@@ -1,0 +1,258 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{DE37DD80-30C5-40A7-A0F2-A410D6E519FA}</ProjectGuid>
+        <ProjectVersion>18.1</ProjectVersion>
+        <MainSource>FinStats.dpr</MainSource>
+        <Config Condition="'$(Config)'==''">Debug</Config>
+        <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
+        <FrameworkType>VCL</FrameworkType>
+        <Base>True</Base>
+        <Platform Condition="'$(Platform)'==''">Win32</Platform>
+        <TargetedPlatforms>1</TargetedPlatforms>
+        <AppType>Application</AppType>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Base)'=='true') or '$(Base_Win32)'!=''">
+        <Base_Win32>true</Base_Win32>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Release' or '$(Cfg_1)'!=''">
+        <Cfg_1>true</Cfg_1>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_1)'=='true') or '$(Cfg_1_Win32)'!=''">
+        <Cfg_1_Win32>true</Cfg_1_Win32>
+        <CfgParent>Cfg_1</CfgParent>
+        <Cfg_1>true</Cfg_1>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Debug' or '$(Cfg_2)'!=''">
+        <Cfg_2>true</Cfg_2>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_2)'=='true') or '$(Cfg_2_Win32)'!=''">
+        <Cfg_2_Win32>true</Cfg_2_Win32>
+        <CfgParent>Cfg_2</CfgParent>
+        <Cfg_2>true</Cfg_2>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Base)'!=''">
+        <VerInfo_MinorVer>1</VerInfo_MinorVer>
+        <SanitizedProjectName>FinStats</SanitizedProjectName>
+        <VerInfo_MajorVer>2</VerInfo_MajorVer>
+        <VerInfo_Build>17</VerInfo_Build>
+        <DCC_Namespace>Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;System;Xml;Data;Datasnap;Web;Soap;Winapi;System.Win;VCLTee;$(DCC_Namespace)</DCC_Namespace>
+        <VerInfo_Keys>CompanyName=IP Vladimirov D.N.;FileDescription=Statistics processing program;FileVersion=2.1.0.17;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=Executive&apos;s helper;ProductVersion=2.1.0.17;Comments=Generic version</VerInfo_Keys>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <VerInfo_Locale>1049</VerInfo_Locale>
+        <DCC_OutputDRCFile>true</DCC_OutputDRCFile>
+        <DCC_Define>STATPROJ;$(DCC_Define)</DCC_Define>
+        <DCC_IMPLICIT_STRING_CAST_LOSS>false</DCC_IMPLICIT_STRING_CAST_LOSS>
+        <DCC_IMPLICIT_STRING_CAST>false</DCC_IMPLICIT_STRING_CAST>
+        <DCC_UsePackage>vclx;vcl;vclimg;dbrtl;rtl;vcldb;vcldbx;vclib;vclie;tmsd2009;EhLib120;$(DCC_UsePackage)</DCC_UsePackage>
+        <DCC_DependencyCheckOutputName>FinStats.exe</DCC_DependencyCheckOutputName>
+        <DCC_ImageBase>00400000</DCC_ImageBase>
+        <DCC_Platform>x86</DCC_Platform>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Base_Win32)'!=''">
+        <VerInfo_Build>26</VerInfo_Build>
+        <DCC_Namespace>Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
+        <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
+        <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
+        <Icon_MainIcon>FinStats_Icon.ico</Icon_MainIcon>
+        <Debugger_DebugSourcePath>D:\Programs\CodeGear\Components\ZeosDBO-7.0\src\component\;D:\Programs\CodeGear\Components\ZeosDBO-7.0\src\dbc\;D:\Programs\CodeGear\Components\TMS.Component.Pack.v5.0.1.2\;C:\1\Zeos\src\component\;C:\1\Zeos\src\dbc\;C:\D2009\ZEOS\src\dbc\;D:\Zeos\src\component\;D:\Zeos\src\dbc\;$(Debugger_DebugSourcePath)</Debugger_DebugSourcePath>
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=2.1.0.26;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_1)'!=''">
+        <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
+        <DCC_Define>RELEASE;$(DCC_Define)</DCC_Define>
+        <DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
+        <DCC_DebugInformation>0</DCC_DebugInformation>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+        <DCC_Define>RWLO;$(DCC_Define)</DCC_Define>
+        <Debugger_LoadAllSymbols>false</Debugger_LoadAllSymbols>
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=2.1.0.27;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Build>27</VerInfo_Build>
+        <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
+        <AppEnableHighDPI>true</AppEnableHighDPI>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_2)'!=''">
+        <DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
+        <Debugger_DebugSourcePath>D:\D10\ZEOS\src\dbc\;D:\D10\ZEOS\src\component\;D:\D10\ZEOS\src\core\;$(Debugger_DebugSourcePath)</Debugger_DebugSourcePath>
+        <VerInfo_Build>27</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=2.1.0.27;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
+        <AppEnableHighDPI>true</AppEnableHighDPI>
+    </PropertyGroup>
+    <ItemGroup>
+        <DelphiCompile Include="$(MainSource)">
+            <MainSource>MainSource</MainSource>
+        </DelphiCompile>
+        <RcCompile Include="ENU.rc">
+            <Form>ENU.res</Form>
+        </RcCompile>
+        <RcCompile Include="ESP.rc">
+            <Form>ESP.res</Form>
+        </RcCompile>
+        <RcCompile Include="RUS.rc">
+            <Form>RUS.res</Form>
+        </RcCompile>
+        <DCCReference Include="LoginWindow.pas">
+            <Form>LogInForm</Form>
+        </DCCReference>
+        <DCCReference Include="..\FP\GlobalVars.pas"/>
+        <DCCReference Include="MainPad.pas">
+            <Form>MainStatForm</Form>
+        </DCCReference>
+        <DCCReference Include="NewStatWindow.pas">
+            <Form>NewStatForm</Form>
+        </DCCReference>
+        <DCCReference Include="PadWin.pas">
+            <Form>SmallWin</Form>
+        </DCCReference>
+        <DCCReference Include="..\FP\ErrorWindow.pas">
+            <Form>ErrorForm</Form>
+        </DCCReference>
+        <DCCReference Include="StatGroupWindow.pas">
+            <Form>StatGroupForm</Form>
+        </DCCReference>
+        <DCCReference Include="..\EncLibs\DECFmt.pas"/>
+        <DCCReference Include="..\EncLibs\DECHash.pas"/>
+        <DCCReference Include="..\EncLibs\DECUtil.pas"/>
+        <DCCReference Include="..\EncLibs\DECCipher.pas"/>
+        <DCCReference Include="..\EncLibs\DECData.pas"/>
+        <DCCReference Include="..\EncLibs\CRC.pas"/>
+        <DCCReference Include="AboutWindow.pas">
+            <Form>AboutBox</Form>
+        </DCCReference>
+        <DCCReference Include="AccessWindow.pas">
+            <Form>AccessForm</Form>
+        </DCCReference>
+        <DCCReference Include="..\FP\UserEditWindow.pas">
+            <Form>UserEditForm</Form>
+        </DCCReference>
+        <DCCReference Include="..\FP\LoginNameCheckThread.pas"/>
+        <DCCReference Include="OrgvsUsersWindow.pas">
+            <Form>OrgvsUsersForm</Form>
+        </DCCReference>
+        <DCCReference Include="WEEditWindow.pas">
+            <Form>WEEditForm</Form>
+        </DCCReference>
+        <DCCReference Include="uLkJSON.pas"/>
+        <None Include="ModelSupport_FinStats\default.txaPackage"/>
+        <None Include="ModelSupport_FinStats\FinStats\default.txaPackage"/>
+        <None Include="ModelSupport_FinStats\LoginWindow\default.txaPackage"/>
+        <None Include="ModelSupport_FinStats\FinStats\default.txvpck"/>
+        <None Include="ModelSupport_FinStats\StatsEditorUnit\default.txaPackage"/>
+        <None Include="ModelSupport_FinStats\StatsEditorUnit\default.txvpck"/>
+        <None Include="ModelSupport_FinStats\GlobalVars\default.txaPackage"/>
+        <BuildConfiguration Include="Debug">
+            <Key>Cfg_2</Key>
+            <CfgParent>Base</CfgParent>
+        </BuildConfiguration>
+        <BuildConfiguration Include="Base">
+            <Key>Base</Key>
+        </BuildConfiguration>
+        <BuildConfiguration Include="Release">
+            <Key>Cfg_1</Key>
+            <CfgParent>Base</CfgParent>
+        </BuildConfiguration>
+    </ItemGroup>
+    <Import Project="$(BDS)\Bin\CodeGear.Delphi.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Delphi.Targets')"/>
+    <ProjectExtensions>
+        <Borland.Personality>Delphi.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Delphi.Personality>
+                <Source>
+                    <Source Name="MainSource">FinStats.dpr</Source>
+                </Source>
+                <Parameters>
+                    <Parameters Name="UseLauncher">False</Parameters>
+                    <Parameters Name="LoadAllSymbols">True</Parameters>
+                    <Parameters Name="LoadUnspecifiedSymbols">False</Parameters>
+                    <Parameters Name="DebugSourceDirs">D:\Programs\CodeGear\Components\ZeosDBO-7.0\src\component\;D:\Programs\CodeGear\Components\ZeosDBO-7.0\src\dbc\;D:\Programs\CodeGear\Components\TMS.Component.Pack.v5.0.1.2\;C:\1\Zeos\src\component\;C:\1\Zeos\src\dbc\;C:\D2009\ZEOS\src\dbc\;D:\Zeos\src\component\;D:\Zeos\src\dbc\</Parameters>
+                </Parameters>
+                <VersionInfo>
+                    <VersionInfo Name="IncludeVerInfo">True</VersionInfo>
+                    <VersionInfo Name="AutoIncBuild">False</VersionInfo>
+                    <VersionInfo Name="MajorVer">2</VersionInfo>
+                    <VersionInfo Name="MinorVer">1</VersionInfo>
+                    <VersionInfo Name="Release">0</VersionInfo>
+                    <VersionInfo Name="Build">17</VersionInfo>
+                    <VersionInfo Name="Debug">False</VersionInfo>
+                    <VersionInfo Name="PreRelease">False</VersionInfo>
+                    <VersionInfo Name="Special">False</VersionInfo>
+                    <VersionInfo Name="Private">False</VersionInfo>
+                    <VersionInfo Name="DLL">False</VersionInfo>
+                    <VersionInfo Name="Locale">1049</VersionInfo>
+                    <VersionInfo Name="CodePage">1251</VersionInfo>
+                </VersionInfo>
+                <VersionInfoKeys>
+                    <VersionInfoKeys Name="CompanyName">IP Vladimirov D.N.</VersionInfoKeys>
+                    <VersionInfoKeys Name="FileDescription">Statistics processing program</VersionInfoKeys>
+                    <VersionInfoKeys Name="FileVersion">2.1.0.17</VersionInfoKeys>
+                    <VersionInfoKeys Name="InternalName"/>
+                    <VersionInfoKeys Name="LegalCopyright"/>
+                    <VersionInfoKeys Name="LegalTrademarks"/>
+                    <VersionInfoKeys Name="OriginalFilename"/>
+                    <VersionInfoKeys Name="ProductName">Executive&apos;s helper</VersionInfoKeys>
+                    <VersionInfoKeys Name="ProductVersion">2.1.0.17</VersionInfoKeys>
+                    <VersionInfoKeys Name="Comments">Generic version</VersionInfoKeys>
+                </VersionInfoKeys>
+                <Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVDBPkgD10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVDBPkgD10_Dsgn.bpl not found</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RichViewActionsD10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RichViewActionsD10_Dsgn.bpl not found</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RvHtmlD10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RvHtmlD10_Dsgn.bpl not found</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RvXmlD10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RvXmlD10_Dsgn.bpl not found</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RvRbD10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RvRbD10_Dsgn.bpl not found</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\cxRVEditorsD10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\cxRVEditorsD10_Dsgn.bpl not found</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVDXSpellPkgD10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVDXSpellPkgD10_Dsgn.bpl not found</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\rvHtmlViewImportD10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\rvHtmlViewImportD10_Dsgn.bpl not found</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\Addict3_RichView_D10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\Addict3_RichView_D10_Dsgn.bpl not found</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVHunSpellPkgD10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVHunSpellPkgD10_Dsgn.bpl not found</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVASpellPkgD10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVASpellPkgD10_Dsgn.bpl not found</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVIndyD10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVIndyD10_Dsgn.bpl not found</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVCleverComponentsOldD10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVCleverComponentsOldD10_Dsgn.bpl not found</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVCleverComponentsD10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVCleverComponentsD10_Dsgn.bpl not found</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVMathD10_Dsgn.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\17.0\Bpl\RVMathD10_Dsgn.bpl not found</Excluded_Packages>
+                </Excluded_Packages>
+                <Language>
+                    <Language Name="ProjectLang">$00000419</Language>
+                    <Language Name="ActiveLang">ENU</Language>
+                </Language>
+                <Resource_DLL_Projects>
+                    <Resource_DLL_Projects Name="Item0">Испанский (международная сортировка)*$00000C0A*ESN*ESN</Resource_DLL_Projects>
+                </Resource_DLL_Projects>
+                <RDP_Source_Files>
+                    <RDP_Source_Files Name="Item0">LoginWindow.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item1">MainPad.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item2">NewStatWindow.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item3">PadWin.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item4">..\FP\ErrorWindow.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item5">StatGroupWindow.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item6">AboutWindow.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item7">AccessWindow.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item8">..\FP\UserEditWindow.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item9">OrgvsUsersWindow.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item10">WEEditWindow.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item11">FinStats.drc</RDP_Source_Files>
+                </RDP_Source_Files>
+            </Delphi.Personality>
+            <ModelSupport>True</ModelSupport>
+            <Platforms>
+                <Platform value="Win32">True</Platform>
+            </Platforms>
+        </BorlandProject>
+        <ProjectFileVersion>12</ProjectFileVersion>
+    </ProjectExtensions>
+    <Import Project="$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj" Condition="Exists('$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj')"/>
+</Project>

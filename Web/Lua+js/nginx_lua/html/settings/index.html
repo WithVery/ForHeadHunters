@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html><head>
+<style>table,th,td { border:1px solid rgb(255,255,255); border-collapse:collapse; font-family:"Helvetica";text-align: center;}</style>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script> 
+
+var flip=0;
+var lastNewNumber = 0;
+var lastTriggerNumber = 0;
+var activeChannelNum = 0;
+var allkeys;
+var xmlpost=null;
+var starters = ['','','',''];
+var oldpfx = "old";
+var newpfx = "new";
+var tpfx = "t";
+
+var signalGreen  = "#99FF99";
+var signalYellow = "#FFFFCC";
+var signalRed    = "#FF9999";
+
+<!-- function LaunchNextAnchor(cn) { -->
+	<!-- var timeToStart = starters[cn]; -->
+	<!-- //console(timeToStart); -->
+	<!-- console.log(timeToStart); -->
+	<!-- if( timeToStart || timeToStart != '') { -->
+		<!-- PostChannelURL('/sendchannelcmd?', cn, 'startplaybackfromtime ' + timeToStart) -->
+	<!-- } -->
+<!-- } -->
+
+function PostChannelURL(url, channel, bodyvalue) {
+	//console.log(bodyvalue);
+	PostURL(url, channel + ' ' + bodyvalue);
+}
+
+function PostURL(url, bodyvalue) {
+	//console.log("url: " + url);
+	if (xmlpost == null) {
+		if (window.XMLHttpRequest) {
+			xmlpost = new XMLHttpRequest(); 
+		}
+		else{
+			xmlpost = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+	}
+	xmlpost.open("POST", url, false);
+	xmlpost.setRequestHeader("Content-Type", "text/plain");
+	xmlpost.send(bodyvalue);
+}
+
+var xmlhttp=null;
+var xmlhttpsettings=null;
+
+function loadXMLDoc(url) {
+	if (xmlhttp==null) {
+		if (window.XMLHttpRequest) {
+			xmlhttp=new XMLHttpRequest();
+		}
+		else {
+			xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+		}
+	}
+	
+	xmlhttp.onreadystatechange = function() {
+	if ((xmlhttp.readyState == 4) && (xmlhttp.status==200)) { 
+  var arr = xmlhttp.response; 
+	if(arr == null) return;
+	var channels = arr.chs;
+	if(channels) {
+		var jsonData = JSON.parse(channels);
+		for (var i = 0; i < jsonData.length; i++) {
+				var val = jsonData[i];
+				//console.log();
+				//console.log("id:" + val.id + ", title:" + val.title);
+				
+			 var sCh = document.getElementById("ch" + val.id + "title");
+			 if (sCh) {
+				 sCh.innerHTML = val.title; 
+			 }
+				
+		}
+	}
+	
+  var destkey = arr.id;
+  if (destkey) {
+	 var sStName = document.getElementById("stname" + destkey);
+	 if (sStName) {
+		if(arr.stname == null) {
+	   sStName.innerHTML = "(не определено)"; 
+		}
+		else {
+	   sStName.innerHTML = arr.stname; 
+		 }
+	 }
+
+	 var ggg2 = document.getElementById("fs" + destkey);
+	 if (ggg2) {
+		if(arr.stname == null) {
+			ggg2.innerHTML = ""; 
+		}
+		else {
+			ggg2.innerHTML = arr.fs + " свободно"; 
+		}
+	 }
+
+   var ggg = document.getElementById("status" + destkey);
+	 if (ggg) {
+		if (arr.p != "timeout") {
+			ggg.innerHTML="К скачиванию: "+arr.p+"Mb   ЦПУ:" + arr.CPU; 
+			ggg.style.backgroundColor="#C0F0F0";
+			ggg.style.color="#000000";
+
+			for (j = 0; j < arr.s.length; j++) {
+				var ddd = document.getElementById("status" + (j + 1) + destkey);
+				if (ddd) {
+					ddd.innerHTML = arr.s[j];
+					//ddd.innerHTML = "1"; 
+					ddd.style.color = "#000000";
+					<!-- if (arr.s[j] == "0") -->
+						<!-- ddd.style.backgroundColor = "#C0F0F0"; -->
+					<!-- else -->
+						<!-- ddd.style.backgroundColor = "#00FF00"; -->
+					var pd = ddd.parentElement;
+					if (pd) {
+						if(arr.siglvl) {
+							if(arr.siglvl[j] == 100) {
+								pd.style.backgroundColor = signalGreen;
+							}
+							else if ((arr.siglvl[j] < 100) && (arr.siglvl[j] >= 50)) {
+								pd.style.backgroundColor = signalYellow;
+							}
+							else {
+								pd.style.backgroundColor = signalRed;
+							}
+						}
+						else {
+							pd.style.backgroundColor = signalRed;
+						}
+						//pd.innerHTML = "as";
+						//pd.style.backgroundColor = signalGreen
+					}
+				}
+				
+				var ddd2 = document.getElementById("time" + (j + 1) + destkey);
+				if (ddd2) {
+					ddd2.innerHTML = arr.tl[j]; 
+				}			
+				var ddd3 = document.getElementById("clip"+(j+1)+destkey);
+				if (ddd3) {
+					ddd3.innerHTML=arr.cp[j]; 
+				}			
+				var ddd4=document.getElementById("date"+(j+1)+destkey);
+				if (ddd4) {
+					var d=new Date();
+					d.setTime(1000 * Number(arr.tm[j]));
+					ddd4.innerHTML = d.toDateString(); 
+				}			
+			}
+		}
+		else {
+			ggg.style.backgroundColor="#FF0000";
+			ggg.style.color="#FFFFFF";
+			ggg.innerHTML="Нет связи " + arr.timeout.toFixed(0) + " сек.";
+
+			for (j = 0; j < 16; j++) {
+				var ddd = document.getElementById("status" + (j + 1) + destkey);
+				if (ddd) {
+					ddd.innerHTML = "timeout"; 
+					ddd.style.backgroundColor = "#FF0000";
+					ddd.style.color = "#FFFFFF";
+				}
+				else {
+					break;
+				}
+			}
+		}
+	 } 
+	}
+} 
+};
+
+xmlhttp.open("GET",url,true); 
+xmlhttp.setRequestHeader("If-Modified-Since", "Thu, 1 Jan 1970 00:00:00 GMT"); 
+xmlhttp.setRequestHeader("Cache-Control", "no-cache"); 
+xmlhttp.responseType='json';
+xmlhttp.send("");  
+}
+ 
+function UpdateAllStatus() {
+  if (allkeys.length>0) {
+    loadXMLDoc('/getstatus?id=' + allkeys[flip % allkeys.length]); 
+		flip = flip + 1;
+  }
+}
+
+function loadXMLSettings(url) {
+	if (xmlhttpsettings == null) {
+		if (window.XMLHttpRequest) {
+			xmlhttpsettings = new XMLHttpRequest();
+		}
+		else {
+			xmlhttpsettings = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+	}
+
+	xmlhttpsettings.onreadystatechange = function() {
+		if ((xmlhttpsettings.readyState == 4) && (xmlhttpsettings.status==200)) { 
+			var arr = xmlhttpsettings.response; 
+			if(arr == null) return;
+			var channels = arr.chs;
+			if (channels) {
+				var jsonData = JSON.parse(channels);
+				var chanSel = document.getElementById("chsel");
+				var wasSelectedSet = false;
+				for (var i = 0; i < jsonData.length; i++) {
+					var val = jsonData[i];
+					if(chanSel) {
+						var el = document.createElement("option");	
+						if(el) {
+							el.textContent = val.title; //"Channel 1";
+							el.value = val.id;
+							if(!wasSelectedSet) {
+								wasSelectedSet = true;
+								chanSel.options.selectedIndex = 0;
+							}
+							chanSel.appendChild(el);		
+						}
+					}
+				}
+			}
+			chselChanged();
+		} 
+	};
+	xmlhttpsettings.open("GET", url, true);
+	xmlhttpsettings.setRequestHeader("Cache-Control", "no-cache"); 
+	xmlhttpsettings.responseType='json';
+	xmlhttpsettings.send("");  
+}
+
+// pull all anchors for parsing (for "start anchor" button)
+var xmlAnchors = null;
+var anchors = []; // array of anchor for current channels
+function loadAnchors(url) {
+			//console.log(url);
+	if (xmlAnchors == null) {
+		if (window.XMLHttpRequest) {
+			xmlAnchors = new XMLHttpRequest();
+		}
+		else {
+			xmlAnchors = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+	}
+
+	xmlAnchors.onreadystatechange = function() {
+		//console.log("xmlAllAnchors" + xmlAllAnchors.readyState);
+		if ((xmlAnchors.readyState == 4) && (xmlAnchors.status == 200)) {
+		
+			// remove all old anchors
+			var elTbl = document.getElementById("stbl");
+			for (var i = 0; i < elTbl.rows.length - 2; i++) {
+				var crow = elTbl.rows[i];
+				var rowid = crow.getAttribute('id');
+				if(rowid == null) continue;
+				var pfx = rowid.split('_');
+				
+				if((pfx[0] == newpfx) || (pfx[0] == oldpfx)) {
+					elTbl.deleteRow(i);
+					i--;
+					//console.log(i);
+				}
+			}
+			
+			// remove all old triggers
+			elTbl = document.getElementById("tstbl");
+			for (var i = 0; i < elTbl.rows.length - 1; i++) {
+				var crow = elTbl.rows[i];
+				var rowid = crow.getAttribute('id');
+				if(rowid == null) continue;
+				var pfx = rowid.split('_');
+				
+				if(pfx[0] == tpfx) {
+					elTbl.deleteRow(i);
+					i--;
+					//console.log(i);
+				}
+			}
+			
+			//add anchors from request
+			anchors = [];
+			var resp = xmlAnchors.response;
+			//console.log(resp);
+			if(resp) {
+				var arrj = resp.anchors;
+				if(arrj) {
+					//console.log(arrj);
+					var arr = JSON.parse(arrj);
+					//console.log(arr);
+					if(arr) {
+						if (anchors) {
+							for (var i = 0; i < arr.length; i++) {
+								var item = arr[i];
+								addAnchortoTable(oldpfx, item.idx, item.n, item.bw, item.aw, item.isas);
+							}
+						}
+					}
+				}
+				
+				var tgj = resp.triggers;
+				if(tgj) {
+					//console.log(tgj);
+					var tgsa = JSON.parse(tgj);
+					//console.log(tgsa);
+					if(tgsa) {
+						for (var i = 0; i < tgsa.length; i++) {
+							var item = tgsa[i];
+							//console.log(item);
+							if(item) {
+								addTriggerToTable(tgsa[i].n, tgsa[i].a, tgsa[i].s, tgsa[i].d);
+							}
+						}
+					}
+				}
+			}
+		} 
+	};
+
+	xmlAnchors.open("GET", url, true);
+	xmlAnchors.setRequestHeader("Cache-Control", "no-cache"); 
+	xmlAnchors.responseType='json';
+	xmlAnchors.send("");  
+}
+
+function loadChannelsNames() {
+  loadXMLSettings('/getsettings');
+}
+
+function chselChanged() {
+	var chanSel = document.getElementById("chsel");
+	//console.log(chanSel);
+	if(chanSel) {
+	//console.log(2);
+		activeChannelNum = chanSel.value;
+	//console.log(activeChannelNum);
+		if((activeChannelNum > 0) && (activeChannelNum < 5)) {
+			loadAnchors('/loadchannelsettings?c=' + activeChannelNum);
+		}
+	}
+}
+
+function initPage() {
+	loadChannelsNames();
+}
+
+function OnLoad() { 
+  var cmd = location.search;
+  cmd = cmd.replace("?", "");
+  allkeys = cmd.split(",");
+	
+	initPage();
+}
+
+function deleteAnchorFromTable(cid) {
+	var elTbl = document.getElementById("stbl");
+	for (var i = 0; i < elTbl.rows.length - 1; i++) {
+		var crow = elTbl.rows[i];
+		//var rowid = crow.getAttribute('id');
+		if(crow.id == cid) {
+			elTbl.deleteRow(i);
+			break;
+		}
+	}
+}
+
+function deleteTriggerFromTable(rid) {
+	var elTbl = document.getElementById("tstbl");
+	for (var i = 0; i < elTbl.rows.length - 1; i++) {
+		var crow = elTbl.rows[i];
+		//var rowid = crow.getAttribute('id');
+		if(crow.id == rid) {
+		//console.log(crow.cells[0].innerHTML);
+			PostURL('/deletetrigger?c=' + activeChannelNum, crow.cells[0].innerHTML);
+			elTbl.deleteRow(i);
+			break;
+		}
+	}
+}
+
+function saveAllChannelAnchors() {
+
+	// collecting anchors data
+	var elTbl = document.getElementById("stbl");
+	var allAnchors = {};
+	
+	var newAnchors = {};
+	var ni = 0;
+	var oldAnchors = {};
+	for (var i = 0; i < elTbl.rows.length - 2; i++) {
+		var anchorToAdd = {};
+		var crow = elTbl.rows[i];
+		var rowid = crow.getAttribute('id');
+		if(rowid == null) continue;
+		var pfx = rowid.split('_');
+		
+		if((pfx[0] == newpfx) || (pfx[0] == oldpfx)) {
+			//console.log(pfx[0] + ":" + pfx[1]);
+			var cells = crow.cells;
+			//console.log(cells[0].value);
+			var celEl = cells[0].firstElementChild;
+			//console.log("name=>" + celEl.value);
+			anchorToAdd["n"] = celEl.value;
+			celEl = cells[1].firstElementChild;
+			//console.log("bw=>" + celEl.value);
+			anchorToAdd["bw"] = celEl.value;
+			celEl = cells[2].firstElementChild;
+			//console.log("aw=>" + celEl.value);
+			anchorToAdd["aw"] = celEl.value;
+			celEl = cells[3].firstElementChild;
+//			console.log("aw=>" + celEl.checked);
+			anchorToAdd["as"] = +celEl.checked;
+			//console.log(JSON.stringify(anchorToAdd));			
+			newAnchors[i] = anchorToAdd;
+		}
+	}
+	//allAnchors["old"] = oldAnchors;
+	//allAnchors["new"] = newAnchors;
+	allAnchors["anchors"] = newAnchors;
+	//console.log(JSON.stringify(allAnchors));
+	
+	// collecting triggers data
+	elTbl = document.getElementById("tstbl");
+	
+	var allTriggers = {};
+	// var ni = 0;
+	//var oldAnchors = {};
+	//console.log(elTbl.rows);
+	for (var i = 0; i < elTbl.rows.length - 1; i++) {
+		var triggerToAdd = {};
+		var crow = elTbl.rows[i];
+		var rowid = crow.getAttribute('id');
+		//console.log(i + ":" + rowid);
+		if(rowid == null) continue;
+		//var pfx = rowid.split('_');
+		
+		var cells = crow.cells;
+		// name
+		triggerToAdd["n"] = cells[0].innerHTML;
+		//console.log(i + ":" + cells[0].innerHTML);
+		
+		// anchor
+		var celEl = cells[1].firstElementChild;
+		var celVal = "";
+		if(celEl) {
+			celVal = celEl.value;
+		}
+		triggerToAdd["a"] = celVal;
+		
+		// sensitivity
+		celEl = cells[2].firstElementChild;
+		celVal = "";
+		if(celEl) {
+			celVal = celEl.value;
+		}
+		triggerToAdd["s"] = celVal;
+		
+		// delay
+		celEl = cells[3].firstElementChild;
+		celVal = "";
+		if(celEl) {
+			celVal = celEl.value;
+		}
+		triggerToAdd["d"] = celVal;
+		
+		allTriggers[i] = triggerToAdd;
+	}
+	
+	allAnchors["triggers"] = allTriggers;
+	
+	PostURL("/savechannelsettings?c=" + activeChannelNum, JSON.stringify(allAnchors));
+}
+
+function addAnchortoTable(aPfx, aNum, aName, aBW, aAW, aAS) {
+	var elTbl = document.getElementById("stbl");
+	var x = elTbl.rows.length;
+	var i = x - 2;
+	var newrow = elTbl.insertRow(i);
+	var lName = "";
+	var lBW = "0";
+	var lAW = "0";
+	var lAS = 0;
+	
+	if(aNum == null) {
+		//console.log(aNum);
+		newrow.id = aPfx + "_" + lastNewNumber;
+	}
+	else {
+		//console.log(aNum);
+		newrow.id = aPfx + "_" + aNum;
+		lName = aName;
+		lBW = aBW;
+		lAW = aAW;
+		lAS = aAS;
+	}
+	
+	//anchor title
+	var newcell = newrow.insertCell();
+	newcell.innerHTML = "<input type=\"edit\" style=\"width:290px;\"></input>";	
+	var celEl = newcell.firstElementChild;
+	if(celEl) {
+		celEl.value = lName;
+	}
+	
+	// minus window
+	newcell = newrow.insertCell();
+	newcell.innerHTML = "<input size=\"4\" type=\"number\" style=\"text-align:right;\" min=\"0\" max=\"700\" step=\"1\"/input>";
+	var celEl = newcell.firstElementChild;
+	if(celEl) {
+		celEl.value = lBW;
+	}
+	
+	// plus window
+	newcell = newrow.insertCell();
+	newcell.innerHTML = "<input size=\"4\" type=\"number\" style=\"text-align:right;\" min=\"0\" max=\"700\" step=\"1\"/input>";
+	var celEl = newcell.firstElementChild;
+	if(celEl) {
+		celEl.value = lAW;
+	}
+	
+	// autostart 
+	newcell = newrow.insertCell();
+	newcell.innerHTML = "<input type=\"checkbox\"></input>";
+	var celEl = newcell.firstElementChild;
+	if(celEl && lAS == 1) {
+		celEl.checked = true;
+	}
+
+	// delete button
+	newcell = newrow.insertCell();
+	newcell.innerHTML = "<input type=\"button\" value=\"Удалить\" OnClick=\"deleteAnchorFromTable('" + newrow.id + "')\"></input>";
+	if((aNum <= 0) || (aNum == null)) {
+		lastNewNumber++
+	}
+}
+
+function addTriggerToTable(aName, aAnchor, aSensitivity, aDelay) {
+	var elTbl = document.getElementById("tstbl");
+	var x = elTbl.rows.length;
+	var i = x - 1;
+	var newrow = elTbl.insertRow(i);
+	newrow.id = tpfx + "_" + i;
+	
+	//trigger title
+	var newcell = newrow.insertCell();
+	//newcell.colSpan = "4";
+	newcell.innerHTML = aName;
+	
+	//trigger anchor
+	newcell = newrow.insertCell();
+	//newcell.innerHTML = "<input type=\"edit\" style=\"width:290px;\"></input>";	
+	newcell.innerHTML = "<input type=\"edit\" style=\"\"></input>";	
+	var celEl = newcell.firstElementChild;
+	if(celEl) {
+		celEl.value = aAnchor;
+	}
+
+	//trigger sensitivity
+	newcell = newrow.insertCell();
+	//newcell.innerHTML = "<input type=\"edit\" style=\"width:290px;\"></input>";	
+	//newcell.innerHTML = "<input type=\"edit\" style=\"\"></input>";	
+	newcell.innerHTML = "<input size=\"1\" type=\"number\" style=\"text-align:right;\" min=\"0\" step=\"1\"/input>";
+	
+	var celEl = newcell.firstElementChild;
+	if(celEl) {
+		celEl.value = aSensitivity;
+	}
+	
+	//trigger delay
+	newcell = newrow.insertCell();
+	//newcell.innerHTML = "<input type=\"edit\" style=\"width:290px;\"></input>";	
+	//newcell.innerHTML = "<input type=\"edit\" style=\"\"></input>";	
+	newcell.innerHTML = "<input size=\"1\" type=\"number\" style=\"text-align:right;\" min=\"0\" step=\"1\"/input>";
+	var celEl = newcell.firstElementChild;
+	if(celEl) {
+		celEl.value = aDelay;
+	}
+	
+	// delete button
+	newcell = newrow.insertCell();
+	newcell.innerHTML = "<input type=\"button\" value=\"Удалить\" OnClick=\"deleteTriggerFromTable('" + newrow.id + "')\"></input>";
+}
+
+</script>
+</head>
+
+<body onload="OnLoad()">
+<form name="Form">
+<table id="stbl" bgcolor="#C0F0F0">
+<tr>
+	<td colspan=5>Канал: <select id="chsel" style="width:300px;" onChange="chselChanged();"></select></td>
+</tr>
+<tr>
+	<td colspan=3>Якори</td>
+	<td colspan=2><input type="button" value="Добавить якорь" OnClick="addAnchortoTable('new')"></input></td>
+</tr>
+<tr>
+  <td style="width:300px;">Название</td>
+  <td style="width:120px;">Окно - (сек.)</td>
+  <td style="width:120px;">Окно + (сек.)</td>
+	<td style="width:100px;">Автостарт</td>
+	<td style="width:100px;">Действие</td>
+</tr>
+<tr id="addBtnLine">
+  <td colspan="5">
+		<!-- <input type="button" value="Добавить якорь" OnClick="addAnchortoTable()"></input> -->
+	</td>
+</tr>
+<tr>
+  <td colspan="5">
+		<input type="button" value="Сохранить настройки канала" OnClick="saveAllChannelAnchors()"></input>
+	</td>
+</tr>
+</table>
+
+<table id="tstbl" bgcolor="#C0F0F0">
+<tr>
+	<td colspan=3>Метки</td>
+	<!-- <td><input type="button" id="uploadfiles" value="Добавить метку" OnClick="addTriggerToTable('new')"></input></td> -->
+	<td colspan=2>Загрузить:<input type="file" id="uploadfiles" multiple="multiple"></input></td>	
+</tr>
+<tr>
+  <td style="width:100px;">Название</td>
+  <td style="width:100px;">Якорь</td>
+  <td style="width:50px;">Чувствительность</td>
+  <td style="width:50px;">Задержка</td>
+	<td style="width:100px;">Действие</td>
+</tr>
+<tr id="addBtnLine">
+  <td colspan="5">
+		<!-- <input type="button" value="Добавить якорь" OnClick="addAnchortoTable()"></input> -->
+	</td>
+</tr>
+<!-- <tr> -->
+  <!-- <td colspan="5"> -->
+		<!-- <input type="button" value="Сохранить настройки канала" OnClick="saveAllChannelAnchors()"></input> -->
+	<!-- </td> -->
+<!-- </tr> -->
+</table>
+</form>
+<script>
+(function () {
+
+    var uploadfiles = document.querySelector('#uploadfiles');
+    uploadfiles.addEventListener('change', function () {
+        var files = this.files;
+        for(var i=0; i<files.length; i++){
+            uploadFile(this.files[i]);
+        }
+				console.log("here");
+				chselChanged();
+				console.log("there");
+				PostChannelURL('/sendchannelcmd?', activeChannelNum, 'reloadvideotriggers');
+    }, false);
+
+
+    /**
+     * Upload a file
+     * @param file
+     */
+    function uploadFile(file){
+        //var url = "../server/index.php";
+				//var url = "/uploadtrigger/";
+				var url = "/uploadtrigger/?c=1";
+        var xhr = new XMLHttpRequest();
+        var fd = new FormData();
+        xhr.open("POST", url, true);
+				//xhr.setRequestHeader("Content-type", "application/octet-stream");
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                // Every thing ok, file uploaded
+								//console.log(xhr);
+                //console.log(xhr.responseText); // handle response.
+								chselChanged();
+								//https://127.0.0.1:8081/settings/
+								//https://127.0.0.1:8081/?G1518
+						}
+        };
+        fd.append('uploaded_file', file);
+        xhr.send(fd);
+    }
+}());
+</script>
+</body>
+</html>

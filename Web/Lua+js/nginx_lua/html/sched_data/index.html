@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Загрузка файлов</title>  
+  <link rel="stylesheet" href="style.css">
+	<script>
+	id = 0;
+	
+var xmlSchedsData = null;
+var clips = []; // array of anchor for current channels
+function loadSchedsData(url) {
+	console.log(url);
+	if (xmlSchedsData == null) {
+		if (window.XMLHttpRequest) {
+			xmlSchedsData = new XMLHttpRequest();
+		}
+		else {
+			xmlSchedsData = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+	}
+
+	xmlSchedsData.onreadystatechange = function() {
+		var resp = xmlSchedsData.response;
+		if (resp == null) return;
+		for (objName in resp) {
+			var val = resp[objName];
+			if(objName == "city") {
+				var cityName = val;
+				var cityLbl = document.getElementById("citylbl"); 
+				if (cityLbl != null) {
+					//cityLbl.innerHTML = cityName;
+					cityLbl.innerHTML = "<h1>" + cityName.toUpperCase() + "</h1>";
+				}
+			}
+			else if(objName == "chdata") {
+				var jsonData = JSON.parse(val);
+				for (var i = 0; i < jsonData.length; i++) {
+					var val = jsonData[i];
+					var sCh = document.getElementById("ch" + val.id + "title");
+					if (sCh) {
+					 sCh.innerHTML = val.title; 
+					}
+				}
+			}
+			else if(objName == "schdata") {
+				var jsonData = JSON.parse(val);
+				for (var i = 0; i < jsonData.length; i++) {
+					var val = jsonData[i];
+					for (objSec in val) {
+						var val2 = val[objSec];
+						if(val2 != "") {
+							var ch = i+1
+							var sCh = document.getElementById(ch + "_" + objSec);
+							if (sCh) {
+								var cCells = sCh.cells;
+								if(cCells) {
+									var jsonData2 = JSON.parse(val2);
+									for (dVar in jsonData2) {
+										var dVal = jsonData2[dVar];
+										if (dVar == "txt") {
+											if(dVal == 1) {
+												cCells[3].style.backgroundColor = "#CCFD9F";
+											}
+										}
+										else if (dVar == "tvb") {
+											var jData = JSON.parse(dVal)
+											if(jData) {
+												if(jData[0].et == 0) { // NO ERROR
+													cCells[2].style.backgroundColor = "#CCFD9F";
+												}
+												else {
+													cCells[2].style.backgroundColor = "#FF9797";
+													cCells[2].innerHTML = jData[0].inf;
+												}
+											}
+										}
+										else if (dVar == "ads") {
+											var jData = JSON.parse(dVal)
+											if(jData) {
+												if(jData[0].et == 0) { // NO ERROR
+													cCells[1].style.backgroundColor = "#CCFD9F";
+												}
+												else {
+													console.log(jData[0].inf);
+													console.log(jData[0].lt);
+													cCells[1].style.backgroundColor = "#FF9797";
+													cCells[1].innerHTML = jData[0].inf;
+												}
+											}
+										}
+										else if (dVar == "ir") {
+											var jData = JSON.parse(dVal);
+											//console.log(jData.impres);
+											var impresData = JSON.parse(jData.impres);
+											console.log(impresData);
+											for (var j = 0; j < impresData.length; j++) {
+												var irD = impresData[0];
+												if(irD.lt) {
+													console.log(irD.lt);
+													var parseDate = new Date(irD.lt);
+
+													//parseDate.parse();
+													//console.log(parseDate);
+													var month = parseDate.getMonth()+1;
+													var sday = ("0" + parseDate.getDate()).slice(-2) + "/" + ("0" + month).slice(-2);
+													//console.log(sday);
+													var stime = ("0" + parseDate.getHours()).slice(-2) + ":" + ("0" + parseDate.getMinutes()).slice(-2)+ ":" + ("0" + parseDate.getSeconds()).slice(-2);
+													console.log(sday + " " + stime);
+													//newrow.id = t + "_" + sday;
+													cCells[1].style.backgroundColor = "#CCFD9F";
+													cCells[2].style.backgroundColor = "#CCFD9F";
+													cCells[2].innerHTML = sday + " " + stime;
+													
+												}
+											}
+										}
+									}
+								}
+							}
+							
+						}
+					}
+				}
+			}
+		}
+	};
+
+	xmlSchedsData.open("GET", url, true);
+	xmlSchedsData.setRequestHeader("Cache-Control", "no-cache"); 
+	xmlSchedsData.responseType='json';
+	xmlSchedsData.send("");  
+}
+	
+	function initPage() {
+		var clipLink = document.getElementById("toClipLink");
+		if(clipLink) {
+			var aa = clipLink.innerHTML;
+			clipLink.innerHTML = aa.replace(/KEYID/g, id, 'g');
+		}
+		
+		var today = new Date();
+		//console.log(today.getDate() + "/" + (today.getMonth()+1)  + "/" + today.getFullYear());
+		for(var t = 1; t <= 4; t++) {
+			var elTbl = document.getElementById("st" + t + "tbl");
+			if(elTbl) {
+				for(var i = 0; i < 7; i++) {
+					var curdate = new Date();
+					curdate.setDate(curdate.getDate() + i);
+					var x = elTbl.rows.length;
+					
+					var raw = elTbl.rows[x - 1];
+					
+					var aa = raw.innerHTML;
+					var bb = "";
+						
+					var newrow = elTbl.insertRow(x);
+					var month = curdate.getMonth()+1;
+					var sday = ("0" + curdate.getDate()).slice(-2) + "/" + ("0" + month).slice(-2)  + "/" + curdate.getFullYear();
+					newrow.id = t + "_" + sday;
+					
+					var newcell = newrow.insertCell();
+					newcell.innerHTML = sday; //curdate.getDate() + "/" + (curdate.getMonth()+1)  + "/" + curdate.getFullYear();
+					newcell = newrow.insertCell();
+					newcell = newrow.insertCell();
+					newcell = newrow.insertCell();
+					
+				}
+			}
+		}
+		loadSchedsData('/loadstationschedsdata?id=' + id);
+	}
+	
+	function findGetParameter(parameterName) {
+			var result = null, tmp = [];
+			var items = location.search.substr(1).split("&");
+			for (var index = 0; index < items.length; index++) {
+					tmp = items[index].split("=");
+					if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+			}
+			return result;
+	}
+	
+	function OnLoad() { 
+
+	var cmd = findGetParameter("id");
+		var allkeys = cmd.split(",");
+		id = allkeys[0]; //"G1518";
+		initPage();
+	}
+	</script>
+</head>
+<body onload="OnLoad()">
+<div id="drop-area">
+  <form class="my-form">
+    <p>Выберите ADS-файлы и бегушки или просто перетащите их в эту область.</p>
+    <!-- <input type="file" id="fileElem" multiple accept="image/*" onchange="handleFiles(this.files)"> -->
+    <input type="file" id="fileElem" multiple accept="application/octet-stream" onchange="handleFiles(this.files)">
+    <label class="button" for="fileElem">Выбрать файлы</label>
+  </form>
+  <progress id="progress-bar" max=100 value=0></progress>
+  <!-- <div id="gallery" /></div> -->
+</div>
+<!-- <div id="table-area" style="width:100%;margin:0;padding:0;background-color:#000;"> -->
+<div id="toClipLink" style="width:100%;"><a href="/up/?id=KEYID">К клипам</a></div>
+
+<div id="table-area" style="width:100%;">
+<!-- <table id="maintbl" bgcolor="#C0F0F0" style="text-align:center;width:100%;table-layout:fixed;"> -->
+<table id="maintbl" style="text-align:center;width:100%;table-layout:fixed;">
+	<!-- <td colspan=3 style="text-align:center;width:100%;table-layout:fixed;" id="citylbl:"><Город></td> -->
+<tr>
+	<td colspan=8 style="text-align:center;" id="citylbl"><h1><Город></h1></td>
+</tr>
+<tr>
+	<td colspan=4 style="text-align:center;" id="ch1title"><Канал 1></td>
+	<td colspan=4 tyle="text-align:center;" id="ch2title"><Канал 2></td>
+</tr>
+<tr>
+	<td colspan=4 style="text-align:center;" id="ch1tbl">
+		<table id="st1tbl" bgcolor="#C0F0F0" style="text-align:center;width:100%;table-layout:fixed;">
+			<thead>
+			<tr>
+				<td>Даты</td>
+				<td>Клипы</td>
+				<td>Баннеры</td>
+				<td>Бегушки</td>
+			</tr>
+			</thead>		
+		</table>
+	</td>
+	<td colspan=4 style="text-align:center;" id="ch2lbl">
+		<table id="st2tbl" style="text-align:center;width:100%;table-layout:fixed;">
+			<thead>
+			<tr>
+				<td>Даты</td>
+				<td>Клипы</td>
+				<td>Баннеры</td>
+				<td>Бегушки</td>
+			</tr>
+			</thead>		
+		</table>
+	</td>
+</tr>
+<tr>
+	<td colspan=4 style="text-align:center;" id="ch3title"><Канал 3></td>
+	<td colspan=4 style="text-align:center;" id="ch4title"><Канал 4></td>
+<tr>
+	<td colspan=4 style="text-align:center;" id="ch3lbl">
+		<table id="st3tbl" style="text-align:center;width:100%;table-layout:fixed;">
+			<thead>
+			<tr>
+				<td>Даты</td>
+				<td>Клипы</td>
+				<td>Баннеры</td>
+				<td>Бегушки</td>
+			</tr>
+			</thead>		
+		</table>
+	</td>
+	<td colspan=4 style="text-align:center;" id="ch4lbl">
+		<table id="st4tbl" bgcolor="#C0F0F0" style="text-align:center;width:100%;table-layout:fixed;">
+			<thead>
+			<tr>
+				<td>Даты</td>
+				<td>Клипы</td>
+				<td>Баннеры</td>
+				<td>Бегушки</td>
+			</tr>
+			</thead>		
+		</table>
+	</td>
+</tr>
+</tr>
+</table>
+</div>
+
+<script>
+// ************************ Drag and drop ***************** //
+let dropArea = document.getElementById("drop-area")
+
+// Prevent default drag behaviors
+;['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+  dropArea.addEventListener(eventName, preventDefaults, false)   
+  document.body.addEventListener(eventName, preventDefaults, false)
+})
+
+// Highlight drop area when item is dragged over it
+;['dragenter', 'dragover'].forEach(eventName => {
+  dropArea.addEventListener(eventName, highlight, false)
+})
+
+;['dragleave', 'drop'].forEach(eventName => {
+  dropArea.addEventListener(eventName, unhighlight, false)
+})
+
+
+// Handle dropped files
+dropArea.addEventListener('drop', handleDrop, false)
+
+function preventDefaults (e) {
+  e.preventDefault()
+  e.stopPropagation()
+}
+
+function highlight(e) {
+  dropArea.classList.add('highlight')
+}
+
+function unhighlight(e) {
+  dropArea.classList.remove('active')
+}
+
+function handleDrop(e) {
+  var dt = e.dataTransfer
+  var files = dt.files
+  handleFiles(files)
+	location.reload()
+}
+
+let uploadProgress = []
+let progressBar = document.getElementById('progress-bar')
+
+function initializeProgress(numFiles) {
+  progressBar.value = 0
+  uploadProgress = []
+
+  for(let i = numFiles; i > 0; i--) {
+    uploadProgress.push(0)
+  }
+}
+
+function updateProgress(fileNumber, percent) {
+  uploadProgress[fileNumber] = percent
+  let total = uploadProgress.reduce((tot, curr) => tot + curr, 0) / uploadProgress.length
+  console.debug('update', fileNumber, percent, total)
+  progressBar.value = total
+}
+
+function handleFiles(files) {
+  files = [...files]
+  initializeProgress(files.length)
+	//console.log(files.length)
+  files.forEach(uploadFile)
+}
+
+function uploadFile(file, i) {
+  //var url = 'https://api.cloudinary.com/v1_1/joezimim007/image/upload'
+	var url = '/uploadscheddata/?id=' + id;
+	//console.log(i)
+  var xhr = new XMLHttpRequest()
+  var formData = new FormData()
+  xhr.open('POST', url, true)
+  xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+
+  // Update progress (can be used to show progress indicator)
+  xhr.upload.addEventListener("progress", function(e) {
+    updateProgress(i, (e.loaded * 100.0 / e.total) || 100)
+  })
+
+  xhr.addEventListener('readystatechange', function(e) {
+    if (xhr.readyState == 4 && xhr.status == 200) {
+      updateProgress(i, 100) // <- Add this
+    }
+    else if (xhr.readyState == 4 && xhr.status != 200) {
+      // Error. Inform the user
+    }
+  })
+
+  //formData.append('upload_preset', 'ujpu6gyk')
+  formData.append('file', file)
+  xhr.send(formData)
+}
+</script> 
+</body>
+</html>

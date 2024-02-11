@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html><head>
+<style>table,th,td { border:1px solid rgb(255,255,255); border-collapse:collapse; font-family:"Helvetica";text-align: center;}</style>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script> 
+
+var flip=0;
+var allkeys;
+var xmlpost=null;
+var starters = ['','','',''];
+
+var signalGreen  = "#99FF99";
+var signalYellow = "#FFFFCC";
+var signalRed    = "#FF9999";
+
+<!-- function PostStationsURL(url, bodyvalue) { -->
+	<!-- var elTbl = document.getElementById("cmdtbl"); -->
+	<!-- var x = elTbl.rows.length; -->
+	<!-- //console.log("x: " + x); -->
+	<!-- var j = 0; -->
+  <!-- for (i = 0; i < x; i++) { -->
+		<!-- var currow = elTbl.rows[i]; -->
+		<!-- var rowid = currow.getAttribute('id'); -->
+		<!-- if(rowid == "Stations") { -->
+			<!-- //console.log("rowId:" + rowid); -->
+			<!-- j = i; -->
+			<!-- break; -->
+		<!-- } -->
+  <!-- } -->
+  <!-- for (i = j + 1; i < x; i++) { -->
+		<!-- var currow = elTbl.rows[i]; -->
+		<!-- var key = currow.getAttribute('id'); -->
+		<!-- for(channel = 1; channel < 5; channel++) { -->
+			<!-- //console.log("url: " + url + key); -->
+			<!-- //console.log("param: " + channel + ' ' + bodyvalue); -->
+			<!-- PostURL(url + key, channel + ' ' + bodyvalue); -->
+		<!-- //console.log("rowId:" + rowid); -->
+		<!-- } -->
+  <!-- } -->
+<!-- } -->
+
+function LaunchNextAnchor(cn) {
+	var timeToStart = starters[cn];
+	//console(timeToStart);
+	console.log(timeToStart);
+	if( timeToStart || timeToStart != '') {
+		PostChannelURL('/sendchannelcmd?', cn, 'startplaybackfromtime ' + timeToStart)
+	}
+}
+
+function PostChannelURL(url, channel, bodyvalue) {
+	console.log(bodyvalue);
+
+	PostURL(url, channel + ' ' + bodyvalue);
+/*
+	var elTbl = document.getElementById("cmdtbl");
+	var x = elTbl.rows.length;
+	//console.log("x: " + x);
+	var j = 0;
+  for (i = 0; i < x; i++) {
+		var currow = elTbl.rows[i];
+		var rowid = currow.getAttribute('id');
+		if(rowid == "Stations") {
+			//console.log("rowId:" + rowid);
+			j = i;
+			break;
+		}
+  }
+  for (i = j + 1; i < x; i++) {
+		var currow = elTbl.rows[i];
+		var key = currow.getAttribute('id');
+		//console.log("url: " + url + key);
+		//console.log("param: " + channel + ' ' + bodyvalue);
+		PostURL(url + key, channel + ' ' + bodyvalue);
+		//console.log("rowId:" + rowid);
+  }
+*/	
+}
+
+function PostURL(url, bodyvalue) {
+	console.log("url: " + url);
+	if (xmlpost == null) {
+		if (window.XMLHttpRequest) {
+			xmlpost = new XMLHttpRequest(); 
+		}
+		else{
+			xmlpost = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+	}
+	xmlpost.open("POST", url, false);
+	xmlpost.setRequestHeader("Content-Type", "text/plain");
+	xmlpost.send(bodyvalue);
+}
+
+var xmlhttp=null;
+var xmlhttpsettings=null;
+
+function loadXMLDoc(url) {
+	if (xmlhttp==null) {
+		if (window.XMLHttpRequest) {
+			xmlhttp=new XMLHttpRequest();
+		}
+		else {
+			xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+		}
+	}
+	
+	xmlhttp.onreadystatechange = function() {
+	if ((xmlhttp.readyState == 4) && (xmlhttp.status==200)) { 
+  var arr = xmlhttp.response; 
+	if(arr == null) return;
+	var channels = arr.chs;
+	if(channels) {
+		var jsonData = JSON.parse(channels);
+		for (var i = 0; i < jsonData.length; i++) {
+				var val = jsonData[i];
+				//console.log();
+				//console.log("id:" + val.id + ", title:" + val.title);
+				
+			 var sCh = document.getElementById("ch" + val.id + "title");
+			 if (sCh) {
+				 sCh.innerHTML = val.title; 
+			 }
+				
+		}
+	}
+	
+  var destkey = arr.id;
+  if (destkey) {
+	 var sStName = document.getElementById("stname" + destkey);
+	 if (sStName) {
+		if(arr.stname == null) {
+	   sStName.innerHTML = "(undefined)"; 
+		}
+		else {
+	   sStName.innerHTML = arr.stname; 
+		 }
+	 }
+
+	 var ggg2 = document.getElementById("fs" + destkey);
+	 if (ggg2) {
+		if(arr.stname == null) {
+			ggg2.innerHTML = ""; 
+		}
+		else {
+			ggg2.innerHTML = arr.fs + " свободно"; 
+		}
+	 }
+
+   var ggg = document.getElementById("status" + destkey);
+	 if (ggg) {
+		if (arr.p != "timeout") {
+			ggg.innerHTML="To download: "+arr.p+"Mb   CPU:" + arr.CPU; 
+			ggg.style.backgroundColor="#C0F0F0";
+			ggg.style.color="#000000";
+
+			for (j = 0; j < arr.s.length; j++) {
+				var ddd = document.getElementById("status" + (j + 1) + destkey);
+				if (ddd) {
+					ddd.innerHTML = arr.s[j];
+					//ddd.innerHTML = "1"; 
+					ddd.style.color = "#000000";
+					<!-- if (arr.s[j] == "0") -->
+						<!-- ddd.style.backgroundColor = "#C0F0F0"; -->
+					<!-- else -->
+						<!-- ddd.style.backgroundColor = "#00FF00"; -->
+					var pd = ddd.parentElement;
+					if (pd) {
+						if(arr.siglvl) {
+							if(arr.siglvl[j] == 100) {
+								pd.style.backgroundColor = signalGreen;
+							}
+							else if ((arr.siglvl[j] < 100) && (arr.siglvl[j] >= 50)) {
+								pd.style.backgroundColor = signalYellow;
+							}
+							else {
+								pd.style.backgroundColor = signalRed;
+							}
+						}
+						else {
+							pd.style.backgroundColor = signalRed;
+						}
+						//pd.innerHTML = "as";
+						//pd.style.backgroundColor = signalGreen
+					}
+				}
+				
+				var ddd2 = document.getElementById("time" + (j + 1) + destkey);
+				if (ddd2) {
+					ddd2.innerHTML = arr.tl[j]; 
+				}			
+				var ddd3 = document.getElementById("clip"+(j+1)+destkey);
+				if (ddd3) {
+					ddd3.innerHTML=arr.cp[j]; 
+				}			
+				var ddd4=document.getElementById("date"+(j+1)+destkey);
+				if (ddd4) {
+					var d=new Date();
+					d.setTime(1000 * Number(arr.tm[j]));
+					ddd4.innerHTML = d.toDateString(); 
+				}			
+			}
+		}
+		else {
+			ggg.style.backgroundColor="#FF0000";
+			ggg.style.color="#FFFFFF";
+			ggg.innerHTML="Нет связи " + arr.timeout.toFixed(0) + " s.";
+
+			for (j = 0; j < 16; j++) {
+				var ddd = document.getElementById("status" + (j + 1) + destkey);
+				if (ddd) {
+					ddd.innerHTML = "timeout"; 
+					ddd.style.backgroundColor = "#FF0000";
+					ddd.style.color = "#FFFFFF";
+				}
+				else {
+					break;
+				}
+			}
+		}
+	 } 
+	}
+} 
+};
+
+xmlhttp.open("GET",url,true); 
+xmlhttp.setRequestHeader("If-Modified-Since", "Thu, 1 Jan 1970 00:00:00 GMT"); 
+xmlhttp.setRequestHeader("Cache-Control", "no-cache"); 
+xmlhttp.responseType='json';
+xmlhttp.send("");  
+}
+ 
+function UpdateAllStatus() {
+  if (allkeys.length>0) {
+    loadXMLDoc('/getstatus?id=' + allkeys[flip % allkeys.length]); 
+		flip = flip + 1;
+  }
+}
+
+function loadXMLSettings(url) {
+	if (xmlhttpsettings == null) {
+		if (window.XMLHttpRequest) {
+			xmlhttpsettings = new XMLHttpRequest();
+		}
+		else {
+			xmlhttpsettings = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+	}
+
+	xmlhttpsettings.onreadystatechange = function() {
+		if ((xmlhttpsettings.readyState == 4) && (xmlhttpsettings.status==200)) { 
+			var arr = xmlhttpsettings.response; 
+			if(arr == null) return;
+			var channels = arr.chs;
+			if (channels) {
+				var jsonData = JSON.parse(channels);
+				for (var i = 0; i < jsonData.length; i++) {
+					var val = jsonData[i];
+					//console.log("id:" + val.id + ", title:" + val.title);
+					var sCh = document.getElementById("ch" + val.id + "title");
+					if (sCh) {
+						//sCh.innerHTML = val.title; 
+						sCh.innerHTML = "<a href=\"/channel/?" + val.id + "\">" + val.title + "</a>"
+					}
+				}
+			}
+		} 
+	};
+
+	xmlhttpsettings.open("GET", url, true);
+	xmlhttpsettings.setRequestHeader("Cache-Control", "no-cache"); 
+	xmlhttpsettings.responseType='json';
+	xmlhttpsettings.send("");  
+}
+
+// pull all anchors for parsing (for "start anchor" button)
+var xmlAllAnchors = null;
+var allAnchors = []; // array of anchor for all channels
+function loadAllAnchors(url) {
+	if (xmlAllAnchors == null) {
+		if (window.XMLHttpRequest) {
+			xmlAllAnchors = new XMLHttpRequest();
+		}
+		else {
+			xmlAllAnchors = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+	}
+
+	xmlAllAnchors.onreadystatechange = function() {
+		//console.log("xmlAllAnchors" + xmlAllAnchors.readyState);
+		if ((xmlAllAnchors.readyState == 4) && (xmlAllAnchors.status==200)) {
+			allAnchors = [];
+			var arr = xmlAllAnchors.response;
+			if(arr == null) return;
+			for (j = 1; j <= 4; j++) {
+				var items = [];
+				//console.log(j);
+				var anchors = arr[j];
+				if (anchors) {
+					var jsonData = JSON.parse(anchors);
+					for (var i = 0; i < jsonData.length; i++) {
+						var item = [];
+						//item = jsonData[i].s_name;
+						item.name = jsonData[i].s_name;
+						var tm = jsonData[i].s_start.split('.');
+						item.start = tm[0];
+						
+						items[i] = item;
+					}
+				}
+				allAnchors[j] = items;
+			}
+			//console.log(allAnchors);
+		} 
+	};
+
+	xmlAllAnchors.open("GET", url, true);
+	xmlAllAnchors.setRequestHeader("Cache-Control", "no-cache"); 
+	xmlAllAnchors.responseType='json';
+	xmlAllAnchors.send("");  
+}
+
+function UpdateSettings() {
+  loadXMLSettings('/getsettings');
+	var today = new Date();
+	//console.log(today.getFullYear() + '-' + ("0" + (today.getMonth()+1)).slice(-2) + '-' + ("0" + today.getDate()).slice(-2));
+  loadAllAnchors('/getallanchors?c=1,2&date=' + today.getFullYear() + '-' + ("0" + (today.getMonth()+1)).slice(-2) + '-' + ("0" + today.getDate()).slice(-2));
+}
+
+function CloneCmdTable() {
+//	var element = document.getElementById("Stations");
+	
+	var elTbl = document.getElementById("cmdtbl");
+	var x = elTbl.rows.length;
+	var raw = elTbl.rows[x - 1];
+	//console.log("raw:" + raw.innerHTML);
+  var aa = raw.innerHTML;
+  var bb = "";
+	elTbl.deleteRow(x - 1);
+	
+  for (i = 0; i < allkeys.length; i++) {
+    var newrow = elTbl.insertRow(x - 1);
+    var cc = aa.replace(/KEYID/g, allkeys[i], 'g');
+		newrow.innerHTML = cc;
+		newrow.id = allkeys[i];
+		//console.log("newrow.id:" + newrow.id);
+		x = x +1;
+  }
+}
+
+function CloneStatusTable() {
+  var aa = document.getElementById("statustbl").innerHTML; 
+  var bb = "";
+
+  for (i=0;i<allkeys.length; i++) {
+    var cc = aa.replace(/KEYID/g, allkeys[i], 'g');
+    bb = bb + cc; 
+  }
+  
+  if (allkeys.length > 0) {
+    document.getElementById("statustbl").innerHTML = bb;
+  }
+	else {
+    document.getElementById("statustbl").innerHTML = "<tr></tr>";
+  }
+}
+
+function checkTime(i) {
+  if (i < 10) {
+    i = "0" + i;
+  }
+  return i;
+}
+
+function startTime() {
+  var today = new Date();
+  var h = today.getHours();
+  var m = today.getMinutes();
+  var s = today.getSeconds();
+	
+  // add a zero in front of numbers<10
+  m = checkTime(m);
+  s = checkTime(s);
+	
+	var curtime = document.getElementById('curtime');
+	if(curtime) {
+		curtime.innerHTML = h + ":" + m + ":" + s;
+	}
+	else {
+		console.log("curtine is null");
+	}
+  //document.getElementById('curdate').innerHTML = today.getDate() + "/" + (today.getMonth()+1)  + "/" + today.getFullYear();
+
+  t = setTimeout(function() { startTime() }, 500);
+
+	//if(promoBlocked == 1) return;
+	//console.log(promoBlocked);
+	for (i = 1; i <= 4; i++) {
+		//console.log(i);
+		starters[i] = '';
+		var anchors = allAnchors[i];
+		if(!anchors) continue;
+		var timeTo = document.getElementById('ch' + i + 't');
+		var nameTo = document.getElementById('ch' + i + 'n');
+		var btnStart = document.getElementById('btn' + i);
+
+		//console.log(timeTo);
+		
+		for (j = 0; j < anchors.length; j++) {
+			//console.log(anchors[j]);
+			//console.log(anchors);
+			var today = new Date();
+			//console.log(today.getFullYear() + '-' + ("0" + (today.getMonth()+1)).slice(-2) + '-' + ("0" + today.getDate()).slice(-2));
+			//var curdate = '2018-09-08'
+			var curdate = today.getFullYear() + '-' + ("0" + (today.getMonth()+1)).slice(-2) + '-' + ("0" + today.getDate()).slice(-2);
+			//var cday = dateControl.value.split('-');
+			var cday = curdate.split('-');
+			//console.log(cday);
+			var ctime = anchors[j].start.split(':');
+			//console.log(anchors[j].start);
+			
+			var itemTime = new Date(cday[0], cday[1] - 1, cday[2], ctime[0], ctime[1], ctime[2]);
+			//var itmeTimeName = ctime[0], ctime[1], ctime[2]
+			//..startplaybackfromtime ' + moment
+			//console.log(itemTime);
+			
+			var itemTime_ms = itemTime.getTime();
+			//console.log('times');
+			//console.log(itemTime_ms);
+			var now_ms      = today.getTime();
+			//console.log(now_ms);
+			
+			<!-- var nWBefore_ms = nWBefore * 1000; -->
+			var nWAfter_ms  = 10000; //nWAfter * 1000; -->
+			
+			if(itemTime_ms + nWAfter_ms < now_ms) continue;
+			
+			//currentAnchor = anchors[j].start;
+		
+			var diff = 0;
+			var sSign = "";
+			//console.log(itemTime_ms);
+			//console.log(now_ms);
+			if(itemTime_ms < now_ms) {
+				sSign = "-";
+				diff = now_ms - itemTime_ms;
+			}
+			else {
+				diff = itemTime_ms - now_ms;
+			}
+			
+			bFound  = true;
+			//console.log(bFound);
+	//take out milliseconds
+
+			diff = diff/1000;
+			var tdiff = diff;
+			var seconds = Math.floor(diff % 60);
+			diff = diff/60; 
+			var minutes = Math.floor(diff % 60);
+			diff = diff/60; 
+			var hours = Math.floor(diff % 24);  
+			var days = Math.floor(diff/24);
+			
+			//var aMinute = 1 * 60 * 60 + 42 * 60;
+			//var aMinute = 1 * 60 * 60;
+			var aMinute = 5 * 60;
+			var setItRed = tdiff < aMinute;
+			
+/*			
+			if(promoBlocked == null) {
+				timeTo.innerHTML = "";
+			}
+			else if(promoBlocked == 1) {
+				timeTo.innerHTML = "<Реклама заблокирована>";
+				timeTo.style.color = "#ff0000";
+			}
+			else {
+*/			
+				if(timeTo) {
+					timeTo.innerHTML = sSign + ("0" + hours).slice(-2) + ":" + ("0" + minutes).slice(-2) + ":" + ("0" + seconds).slice(-2);
+					nameTo.innerHTML = anchors[j].name;
+					//starters[i] = timeTo.innerHTML; //itemTime;
+					starters[i] = ("0" + ctime[0]).slice(-2) + ":" + ("0" + ctime[1]).slice(-2) + ":" + ("0" + ctime[2]).slice(-2);
+				}
+				if(setItRed) {
+					timeTo.style.color = "#ff0000";
+					nameTo.style.color = "#ff0000";
+				}
+				else {
+					timeTo.style.color = "#000000";
+					nameTo.style.color = "#000000";
+				}
+			//}
+			
+			//var cday = dateControl.value.split('-');
+			
+			break;			
+		}
+	}
+	//console.log(starters);
+}
+
+function initPage() {
+	startTime();
+	var dateControl = document.querySelector('input[type="date"]');
+	var dateControl = document.getElementById('curtime');
+	dateControl.value = new Date().toISOString().substring(0, 10);
+}
+
+function OnLoad() { 
+  var cmd = location.search;
+  cmd = cmd.replace("?", "");
+  allkeys = cmd.split(",");
+	
+	initPage();
+	
+	//PullChannelsNames(); - make it!
+
+  CloneCmdTable();
+  //CloneStatusTable();
+  window.setInterval("UpdateAllStatus()", 1000 / (allkeys.length + 1));
+	UpdateSettings();
+  window.setInterval("UpdateSettings()", 5000);
+}
+</script>
+</head>
+
+<body onload="OnLoad()">
+<form name="Form">
+<table id="cmdtbl" bgcolor="#C0F0F0">
+<tr>
+	<td>Time:</td>
+	<td colspan=1 id="curtime">&nbsp;&nbsp;:&nbsp;&nbsp;:&nbsp;&nbsp;</td>	
+  <td></td>
+  <td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>Channels:</td>
+  <td id="ch1title">1</td>
+  <td id="ch2title">2</td>
+  <td id="ch3title">3</td>
+	<td id="ch4title">4</td>
+</tr>
+<tr>
+	<td></td>
+	<td>
+		<input type="button" value="Stop" OnClick="PostChannelURL('/sendcmd?id=', 1, 'stopplayback')"></input>
+		<input type="button" value="Region" OnClick="PostChannelURL('/sendcmd?id=', 1, 'startfromnearestanchor region')"></input>
+		<input type="button" value="Banner" OnClick="PostChannelURL('/sendcmd?id=', 1, 'startfromnearestanchor banner')"></input>
+	</td>
+	<td>
+		<input type="button" value="Stop" OnClick="PostChannelURL('/sendcmd?id=', 2, 'stopplayback')"></input>
+		<input type="button" value="Region" OnClick="PostChannelURL('/sendcmd?id=', 2, 'startfromnearestanchor region')"></input>
+		<input type="button" value="Banner" OnClick="PostChannelURL('/sendcmd?id=', 2, 'startfromnearestanchor banner')"></input>
+	</td>
+	<td>
+		<input type="button" value="Stop" OnClick="PostChannelURL('/sendcmd?id=', 3, 'stopplayback')"></input>
+		<input type="button" value="Region" OnClick="PostChannelURL('/sendcmd?id=', 3, 'startfromnearestanchor region')"></input>
+		<input type="button" value="Banner" OnClick="PostChannelURL('/sendcmd?id=', 3, 'startfromnearestanchor banner')"></input>
+	</td>
+	<td>
+		<input type="button" value="Stop" OnClick="PostChannelURL('/sendcmd?id=', 4, 'stopplayback')"></input>
+		<input type="button" value="Region" OnClick="PostChannelURL('/sendcmd?id=', 4, 'startfromnearestanchor region')"></input>
+		<input type="button" value="Banner" OnClick="PostChannelURL('/sendcmd?id=', 4, 'startfromnearestanchor banner')"></input>
+	</td>
+</tr>
+<tr>
+	<td>Next anchor:</td>
+  <!-- <td id="ch1nb"><span id="ch1t"> <span/><input type="button" value="Stop" OnClick="PostChannelURL('/sendcmd?id=', 2, 'stopplayback')"></input></td> -->
+	<td id="ch1nb"><p id="ch1t">&nbsp;&nbsp;:&nbsp;&nbsp;:&nbsp;&nbsp;</p><p id="ch1n"></p><input type="button" id="btn1" value="Start" OnClick="LaunchNextAnchor(1)"></input></td>
+	<td id="ch2nb"><p id="ch2t">&nbsp;&nbsp;:&nbsp;&nbsp;:&nbsp;&nbsp;</p><p id="ch2n"></p><input type="button" id="btn2" value="Start" OnClick="LaunchNextAnchor(2)"></input></td>
+	<td id="ch3nb"><p id="ch3t">&nbsp;&nbsp;:&nbsp;&nbsp;:&nbsp;&nbsp;</p><p id="ch3n"></p><input type="button" id="btn3" value="Start" OnClick="LaunchNextAnchor(3)"></input></td>
+	<td id="ch4nb"><p id="ch4t">&nbsp;&nbsp;:&nbsp;&nbsp;:&nbsp;&nbsp;</p><p id="ch4n"></p><input type="button" id="btn4" value="Start" OnClick="LaunchNextAnchor(4)"></input></td>
+</tr>
+<tr id = "Stations">
+	<td colspan=5>Stations</td>
+</tr>
+<tr id="KEYID">
+	<td>
+		<span id="stnameKEYID">?????</span><br>
+		KEYID<br>
+		<span id="statusKEYID">?????</span><br>
+		<span id="fsKEYID">?????</span>
+	</td>
+  <td>
+		<input type="button" value="Stop" OnClick="PostURL('/sendcmd?id=KEYID','1 stopplayback')"></input>
+		<input type="button" value="Region" OnClick="PostURL('/sendcmd?id=KEYID','1 startfromnearestanchor region')"></input>
+		<input type="button" value="Banner" OnClick="PostURL('/sendcmd?id=KEYID','1 startfromnearestanchor banner')"></input>
+		<br>
+		<span id="status1KEYID">?????</span>
+		<span id="time1KEYID">?????</span>
+		<span id="clip1KEYID">?????</span>
+		<span id="date1KEYID">?????</span>
+	</td>
+  <td>
+		<input type="button" value="Stop" OnClick="PostURL('/sendcmd?id=KEYID','2 stopplayback')"></input>
+		<input type="button" value="Region" OnClick="PostURL('/sendcmd?id=KEYID','2 startfromnearestanchor region')"></input>
+		<input type="button" value="Banner" OnClick="PostURL('/sendcmd?id=KEYID','2 startfromnearestanchor banner')"></input>
+		<br>
+		<span id="status2KEYID">?????</span>
+		<span id="time2KEYID">?????</span>
+		<span id="clip2KEYID">?????</span>
+		<span id="date2KEYID">?????</span>
+	</td>
+  <td>
+		<input type="button" value="Stop" OnClick="PostURL('/sendcmd?id=KEYID','3 stopplayback')"></input>
+		<input type="button" value="Region" OnClick="PostURL('/sendcmd?id=KEYID','3 startfromnearestanchor region')"></input>
+		<input type="button" value="Banner" OnClick="PostURL('/sendcmd?id=KEYID','3 startfromnearestanchor banner')"></input>
+		<br>
+		<span id="status3KEYID">?????</span>
+		<span id="time3KEYID">?????</span>
+		<span id="clip3KEYID">?????</span>
+		<span id="date3KEYID">?????</span>
+	</td>
+  <td>
+		<input type="button" value="Stop" OnClick="PostURL('/sendcmd?id=KEYID','4 stopplayback')"></input>
+		<input type="button" value="Region" OnClick="PostURL('/sendcmd?id=KEYID','4 startfromnearestanchor region')"></input>
+		<input type="button" value="Banner" OnClick="PostURL('/sendcmd?id=KEYID','4 startfromnearestanchor banner')"></input>
+		<br>
+		<span id="status4KEYID">?????</span>
+		<span id="time4KEYID">?????</span>
+		<span id="clip4KEYID">?????</span>
+		<span id="date4KEYID">?????</span>
+	</td>
+</tr>
+</table>
+
+<!-- <table id="statustbl1"> -->
+<!-- <tr> -->
+<!-- <td>KEYID</td><td><span id="statusKEYID">?????</span></td> -->
+              <!-- <td><span id="fsKEYID">?????</span></td> -->
+<!-- </tr> -->
+<!-- </table> -->
+
+
+</form>
+</body>
+</html>

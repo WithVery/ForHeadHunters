@@ -1,0 +1,157 @@
+<FP>
+<Globals>
+	<FPNumber>4</FPNumber>
+	<TGI>A</TGI>
+	<TotA1>A</TotA1>
+	<GI>A</GI>
+	<TotB>A</TotB>
+	<CGI>A</CGI>
+	<TotC>A</TotC>
+	<BalC>A</BalC>
+	<TotD>A</TotD>
+	<BalD>A</BalD>
+	<TotE>A</TotE>
+	<TotEI>A</TotEI>
+	<BalE>A</BalE>
+	<TotF>A</TotF>
+	<FPBal>A</FPBal>
+	<FromDate>01.01.2011</FromDate>
+	<ToDate>08.01.2011</ToDate>
+</Globals>
+<SectionA>
+	<LineA>
+		<N>1</N>
+		<Sum>A</Sum>
+		<Descr>A</Descr>
+		<DateTime>A</DateTime>
+		<Source>A</Source>
+	</LineA>
+	<LineA>
+		<N>1</N>
+		<Sum>A</Sum>
+		<Descr>A</Descr>
+		<DateTime>A</DateTime>
+		<Source>A</Source>
+	</LineA>
+</SectionA>
+<SectionA1>
+	<LineA1>
+		<N>1</N>
+		<Descr>A</Descr>
+		<FP1>A</FP1>
+		<Percent>A</Percent>
+		<Sum>A</Sum>
+		<Fund>A</Fund>
+	</LineA1>
+	<LineA1>
+		<N>1</N>
+		<Descr>A</Descr>
+		<FP1>A</FP1>
+		<Percent>A</Percent>
+		<Sum>A</Sum>
+		<Fund>A</Fund>
+	</LineA1>
+</SectionA1>
+<SectionB>
+	<LineB>
+		<N>1</N>
+		<Descr>A</Descr>
+		<FP1>A</FP1>
+		<Percent>A</Percent>
+		<Sum>A</Sum>
+		<Fund>A</Fund>
+	</LineB>
+	<LineB>
+		<N>1</N>
+		<Descr>A</Descr>
+		<FP1>A</FP1>
+		<Percent>A</Percent>
+		<Sum>A</Sum>
+		<Fund>A</Fund>
+	</LineB>
+</SectionB>
+<SectionC>
+	<LineC>
+		<N>1</N>
+		<Descr>A</Descr>
+		<FP1>A</FP1>
+		<Percent>A</Percent>
+		<Sum>A</Sum>
+		<Fund>A</Fund>
+	</LineC>
+	<LineC>
+		<N>1</N>
+		<Descr>A</Descr>
+		<FP1>A</FP1>
+		<Percent>A</Percent>
+		<Sum>A</Sum>
+		<Fund>A</Fund>
+	</LineC>
+</SectionC>
+<SectionD>
+	<LineD>
+		<N>1</N>
+		<Descr>A</Descr>
+		<FP1>A</FP1>
+		<Note>A</Note>
+		<Sum>A</Sum>
+		<Fund>A</Fund>
+	</LineD>
+	<LineD>
+		<N>1</N>
+		<Descr>A</Descr>
+		<FP1>A</FP1>
+		<Note>A</Note>
+		<Sum>A</Sum>
+		<Fund>A</Fund>
+	</LineD>
+</SectionD>
+<SectionE>
+	<LineE>
+		<N>1</N>
+		<Date>A</Date>
+		<Subj>A</Subj>
+		<SumR>A</SumR>
+		<Sol>A</Sol>
+		<SumA>A</SumA>
+		<Note>A</Note>
+		<Source>A</Source>
+	</LineE>
+	<LineE>
+		<N>1</N>
+		<Date>A</Date>
+		<Subj>A</Subj>
+		<SumR>A</SumR>
+		<Sol>A</Sol>
+		<SumA>A</SumA>
+		<Note>A</Note>
+		<Source>A</Source>
+	</LineE>
+</SectionE>
+<SectionF>
+	<LineF>
+		<N>1</N>
+		<Descr>A</Descr>
+		<Percent>A</Percent>
+		<Sum>A</Sum>
+		<Fund>A</Fund>
+	</LineF>
+	<LineF>
+		<N>1</N>
+		<Descr>A</Descr>
+		<Percent>A</Percent>
+		<Sum>A</Sum>
+		<Fund>A</Fund>
+	</LineF>
+</SectionF>
+<SectionG>
+	<LineG>
+		<Acc>A</Acc>
+		<Sum>A</Sum>
+	</LineG>
+	<LineG>
+		<Acc>A</Acc>
+		<Sum>A</Sum>
+	</LineG>
+</SectionG>
+</FP>

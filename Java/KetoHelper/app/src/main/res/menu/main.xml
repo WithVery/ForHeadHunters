@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+         xmlns:app="http://schemas.android.com/apk/res-auto"
+         xmlns:tools="http://schemas.android.com/tools"
+         tools:context="ru.fazleeva.ketohelper.KetoHelperMainActivity">
+    <item android:id="@+id/our_services"
+        android:title="@string/our_services"
+        />
+    <item android:id="@+id/intensive"
+        android:title="@string/intensive"
+        />
+    <item android:id="@+id/shop"
+        android:title="@string/web_shop"
+        />
+    <item android:id="@+id/about_app"
+        android:title="О приложении"
+        />
+     </menu>

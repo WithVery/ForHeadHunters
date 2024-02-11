@@ -1,0 +1,48 @@
+﻿	<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+		<PropertyGroup>
+			<ProjectGuid>{FD4AD7BD-A425-4C1D-82D8-B68C33E11099}</ProjectGuid>
+		</PropertyGroup>
+		<ItemGroup>
+			<Projects Include="FPv1_2_11.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="ENU\FPv1_2_11_ENU.bdsproj">
+				<Dependencies/>
+			</Projects>
+		</ItemGroup>
+		<ProjectExtensions>
+			<Borland.Personality>Default.Personality.12</Borland.Personality>
+			<Borland.ProjectType/>
+			<BorlandProject>
+				<Default.Personality/>
+			</BorlandProject>
+		</ProjectExtensions>
+		<Target Name="FPv1_2_11">
+			<MSBuild Projects="FPv1_2_11.dproj"/>
+		</Target>
+		<Target Name="FPv1_2_11:Clean">
+			<MSBuild Targets="Clean" Projects="FPv1_2_11.dproj"/>
+		</Target>
+		<Target Name="FPv1_2_11:Make">
+			<MSBuild Targets="Make" Projects="FPv1_2_11.dproj"/>
+		</Target>
+		<Target Name="FPv1_2_11_ENU">
+			<MSBuild Projects="ENU\FPv1_2_11_ENU.bdsproj"/>
+		</Target>
+		<Target Name="FPv1_2_11_ENU:Clean">
+			<MSBuild Targets="Clean" Projects="ENU\FPv1_2_11_ENU.bdsproj"/>
+		</Target>
+		<Target Name="FPv1_2_11_ENU:Make">
+			<MSBuild Targets="Make" Projects="ENU\FPv1_2_11_ENU.bdsproj"/>
+		</Target>
+		<Target Name="Build">
+			<CallTarget Targets="FPv1_2_11;FPv1_2_11_ENU"/>
+		</Target>
+		<Target Name="Clean">
+			<CallTarget Targets="FPv1_2_11:Clean;FPv1_2_11_ENU:Clean"/>
+		</Target>
+		<Target Name="Make">
+			<CallTarget Targets="FPv1_2_11:Make;FPv1_2_11_ENU:Make"/>
+		</Target>
+		<Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+	</Project>

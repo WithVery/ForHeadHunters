@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>1899.12.30 00:00:00.000.pas,C:\Documents and Settings\neo\Мои документы\RAD Studio\Projects\Unit1.pas=C:\Work\https\Main.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.pas,C:\Work\Launcher\Unit1.pas=C:\Work\Launcher\AAndUThread.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.640,=E:\Work\LauncherD10_MUI\ESP.rc</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.dfm,C:\Documents and Settings\neo\Мои документы\RAD Studio\Projects\Unit1.dfm=C:\Work\https\Main.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.291,E:\Work\LauncherD10_MUI\ESP.rc=</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.pas,C:\Work\FPv1.2.4.16\GlobalVars.pas=</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.602,E:\Work\LauncherD10_MUI\ENU.rc=</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.633,=E:\Work\LauncherD10_MUI\ENU.rc</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.dproj,C:\Documents and Settings\neo\Мои документы\RAD Studio\Projects\Project1.dproj=C:\Work\https\https.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.646,=E:\Work\LauncherD10_MUI\RUS.rc</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.716,E:\Work\LauncherD10_MUI\RUS.rc=</Transaction>
+  </Transactions>
+</BorlandProject>

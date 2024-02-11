@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html><head>
+<style>table,th,td { border:1px solid rgb(255,255,255); border-collapse:collapse; font-family:"Helvetica";font-size:9pt;text-align:left;}
+table.fixed {table-layout:fixed; width:90px;}/*Setting the table width is important!*/
+table.fixed td {overflow:hidden;}/*Hide text outside the cell.*/
+table.fixed td:nth-of-type(1) {width:150px;} /*Setting the width of column 1.*/
+table.fixed td:nth-of-type(2) {width:250px;}/*Setting the width of column 2.*/
+table.fixed td:nth-of-type(3) {width:250px;}/*Setting the width of column 3.*/
+table.fixed td:nth-of-type(4) {width:250px;}/*Setting the width of column 4.*/
+table.fixed td:nth-of-type(5) {width:250px;}/*Setting the width of column 5.*/
+</style>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script> 
+
+var disableButton = true;
+var enableButton = false;
+
+var formatter = new Intl.DateTimeFormat("ru", {year: "2-digit", month: "2-digit", day: "2-digit"});
+
+var flip=0;
+var allkeys;
+var xmlpost=null;
+var starters = ['','','',''];
+var timers   = [0,0,0,0];
+var timerIds = [0,0,0,0];
+var states   = [0,0,0,0];
+// start windows
+var winbefore = [300,600,600,600]; 
+var winafter  = [300,600,600,600]; 
+
+var maxUnblockDelay = 2000; // msec
+
+
+var signalGreen  = "#99FF99";
+var signalYellow = "#FFFFCC";
+var signalRed    = "#FF9999";
+
+// see Tele2 .h - file for definitions
+var acBlockStartedWeb = 3;
+var acBlockStarted    = 8;
+var acStopPalyback    = 11;
+var acEscapePressed   = 12;
+var acSpacebarPressed = 13;
+
+var acStopAnchorTriggered = 6;
+
+var lastTimeChecked = new Date();
+var tdate = new Date();
+var keys = "";
+
+<!-- function PostStationsURL(url, bodyvalue) { -->
+	<!-- var elTbl = document.getElementById("cmdtbl"); -->
+	<!-- var x = elTbl.rows.length; -->
+	<!-- //console.log("x: " + x); -->
+	<!-- var j = 0; -->
+  <!-- for (i = 0; i < x; i++) { -->
+		<!-- var currow = elTbl.rows[i]; -->
+		<!-- var rowid = currow.getAttribute('id'); -->
+		<!-- if(rowid == "Stations") { -->
+			<!-- //console.log("rowId:" + rowid); -->
+			<!-- j = i; -->
+			<!-- break; -->
+		<!-- } -->
+  <!-- } -->
+  <!-- for (i = j + 1; i < x; i++) { -->
+		<!-- var currow = elTbl.rows[i]; -->
+		<!-- var key = currow.getAttribute('id'); -->
+		<!-- for(channel = 1; channel < 5; channel++) { -->
+			<!-- //console.log("url: " + url + key); -->
+			<!-- //console.log("param: " + channel + ' ' + bodyvalue); -->
+			<!-- PostURL(url + key, channel + ' ' + bodyvalue); -->
+		<!-- //console.log("rowId:" + rowid); -->
+		<!-- } -->
+  <!-- } -->
+<!-- } -->
+
+function LaunchNextAnchor(cn) {
+	var timeToStart = starters[cn];
+	//console(timeToStart);
+	//console.log(timeToStart);
+	if (timeToStart || timeToStart != '') {
+		PostChannelURL('/sendchannelcmd?', cn, 'startplaybackfromtime ' + timeToStart)
+	}
+}
+
+function switchChannelButtonsState(cn, astate) {
+	var tD = document.getElementById("ch" + cn + "ctrl");
+	if(tD) {
+		var c = tD.childNodes;
+		for(var jj = 0; jj < c.length; jj++) {
+			c[jj].disabled = astate;
+		}
+	}
+}
+
+
+//function sendChannelCmd(1, 'startfromnearestanchor', 'text') {
+function sendChannelCmd(cn, cmd, params) {
+	// disable all control button first to avoid multiple commands
+	switchChannelButtonsState(cn, disableButton);
+	// fix the moment 
+	
+	timers[cn - 1] = new Date();
+	//console.log(cn + ": " +  timers[cn - 1]);
+	//console.log(timers[i - 1]);
+	
+	PostChannelURL('/sendchannelcmd?', cn, cmd + " " + params)
+	//setTimeout(updateDelay(i), 1000)
+}
+
+function updateDelays() {
+	for(var i = 1; i <= 4; i++) {
+		if (0 < timers[i - 1]) {
+			var curMoment = new Date();
+			var timeDiff = curMoment - timers[i - 1];
+			if (maxUnblockDelay < timeDiff) {
+				timers[i - 1] = 0;
+				switchChannelButtonsState(i, enableButton);
+			}
+		}
+	}
+}
+
+function PostChannelURL(url, channel, bodyvalue) {
+	//console.log(bodyvalue);
+
+	PostURL(url + keys + "&c=" + channel, channel + ' ' + bodyvalue);
+	
+/*
+	var elTbl = document.getElementById("cmdtbl");
+	var x = elTbl.rows.length;
+	//console.log("x: " + x);
+	var j = 0;
+  for (i = 0; i < x; i++) {
+		var currow = elTbl.rows[i];
+		var rowid = currow.getAttribute('id');
+		if(rowid == "Stations") {
+			//console.log("rowId:" + rowid);
+			j = i;
+			break;
+		}
+  }
+  for (i = j + 1; i < x; i++) {
+		var currow = elTbl.rows[i];
+		var key = currow.getAttribute('id');
+		//console.log("url: " + url + key);
+		//console.log("param: " + channel + ' ' + bodyvalue);
+		PostURL(url + key, channel + ' ' + bodyvalue);
+		//console.log("rowId:" + rowid);
+  }
+*/	
+}
+
+function PostURL(url, bodyvalue) {
+	//console.log("url: " + url);
+	//console.log("body: " + bodyvalue);	
+	
+	if (xmlpost == null) {
+		if (window.XMLHttpRequest) {
+			xmlpost = new XMLHttpRequest(); 
+		}
+		else{
+			xmlpost = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+	}
+	xmlpost.open("POST", url, false);
+	xmlpost.setRequestHeader("Content-Type", "text/plain");
+	xmlpost.send(bodyvalue);
+}
+
+function launchBlock(channel, moment, line) {
+	PostChannelURL('/sendchannelcmd?', channel, 'startplaybackfromtime ' + moment);
+}
+
+var xmlhttp=null;
+var xmlhttpsettings=null;
+
+function loadXMLDoc(url) {
+	//console.log(url);
+
+	if (xmlhttp==null) {
+		if (window.XMLHttpRequest) {
+			xmlhttp=new XMLHttpRequest();
+		}
+		else {
+			xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+		}
+	}
+	
+	xmlhttp.onreadystatechange = function() {
+	//console.log(xmlhttp);
+	//return;
+	//console.log(xmlhttp.readyState);
+	if((xmlhttp.readyState == 4) && (xmlhttp.status==200)) { 
+  var arr = xmlhttp.response; 
+	//console.log(arr);
+	if(arr == null) return;
+	
+/*	
+	// channel names
+	var channels = arr.chs;
+	console.log(channels);
+	if(channels) {
+		var jsonData = JSON.parse(channels);
+		for (var i = 0; i < jsonData.length; i++) {
+			var val = jsonData[i];
+				//console.log();
+				//console.log("id:" + val.id + ", title:" + val.title);
+			 var sCh = document.getElementById("ch" + val.id + "title");
+			 if (sCh) {
+				 sCh.innerHTML = val.title; 
+			 }
+		}
+	}
+*/	
+	
+	// station ids/names
+  var destkey = arr.id;
+	//console.log(destkey);
+  if (destkey) {
+		var ggg = null;
+		var sStName = document.getElementById("stname" + destkey);
+		if (sStName) {
+			ggg = sStName.parentElement;
+			if(ggg) {
+				ggg.style.backgroundColor="#b8f5f9";
+				ggg.style.color="#000000";
+			}
+			if(arr.stname == null) {
+			 sStName.innerHTML = "(не определено)"; 
+			}
+			else {
+			 sStName.innerHTML = arr.stname; 
+		 }
+		}
+
+	 {
+		 var ggg2 = document.getElementById("fs" + destkey);
+		 if (ggg2) {
+			if(arr.stname == null) {
+				ggg2.innerHTML = ""; 
+			}
+			else {
+				ggg2.innerHTML = arr.fs;
+			}
+		 }
+	 }
+
+	 { // cpuKEYID
+		var cpuEl = document.getElementById("cpu" + destkey);
+		if(cpuEl) {
+			if (arr.p != "timeout") {
+				//console.log(cpuEl);
+				//console.log(cpuEl.innerHTML);
+				cpuEl.innerHTML = arr.CPU;
+			}
+			else {
+				cpuEl.innerHTML = "-";
+			}
+		}
+	}
+
+	{ // todwldKEYID
+		var tdwldEl = document.getElementById("todwld" + destkey);
+		if(tdwldEl) {
+			//console.log(parseFloat(arr.p.replace(",", ".")));
+			//console.log(arr.ftd);
+			//console.log(destkey);
+			if (arr.p != "timeout") {
+				if(arr.ftd || (arr.ftd == 0)) {
+					tdwldEl.innerHTML = arr.ftd + " файл.";
+					//console.log(tdwldEl.innerHTML);
+					if(parseFloat(arr.ftd) > 0) {
+						tdwldEl.style.backgroundColor="rgb(255, 255, 204)";
+					}
+					else {
+						tdwldEl.style.backgroundColor="";
+					}
+				}
+				else {
+					if(arr.p) {
+					tdwldEl.innerHTML = arr.p + " Mb";
+					if(parseFloat(arr.p.replace(",", ".")) > 0) {
+						tdwldEl.style.backgroundColor="rgb(255, 255, 204)";
+					}
+					else {
+						tdwldEl.style.backgroundColor="";
+					}
+					}
+				}
+			} // if(arr.p...
+			else {
+				tdwldEl.innerHTML = "-";
+			} // if(arr.p...
+		}
+	}
+	
+	//var ggg = document.getElementById("status" + destkey);
+	////console.log(ggg);
+	//if (ggg) {
+		if (arr.p != "timeout") {
+			//console.log(arr.p);
+			//console.log(arr.CPU);
+		
+			//console.log(arr.s);
+			for (j = 0; j < arr.s.length; j++) {
+				var ddd = document.getElementById("status" + (j + 1) + destkey);
+				if (ddd) {
+				 // 
+					var status = "Стоп";
+					if(arr.s[j] === 1) status = "Блок";
+					else if(arr.s[j] === 2) status = "Система";
+					else if(arr.s[j] === 3) status = "Время";
+					//ddd.innerHTML = arr.s[j];
+					ddd.innerHTML = status;
+					//ddd.innerHTML = "1";
+					ddd.style.backgroundColor = "";
+					ddd.style.color = "#000000";
+					<!-- if (arr.s[j] == "0") -->
+						<!-- ddd.style.backgroundColor = "#C0F0F0"; -->
+					<!-- else -->
+						<!-- ddd.style.backgroundColor = "#00FF00"; -->
+					var pd = ddd.parentElement;
+					if (pd) {
+						if(arr.siglvl) {
+							if(arr.siglvl[j] == 100) {
+								pd.style.backgroundColor = signalGreen;
+							}
+							else if ((arr.siglvl[j] < 100) && (arr.siglvl[j] >= 50)) {
+								pd.style.backgroundColor = signalYellow;
+							}
+							else {
+								pd.style.backgroundColor = signalRed;
+							}
+						}
+						else {
+							pd.style.backgroundColor = signalRed;
+						}
+						//pd.innerHTML = "as";
+						//pd.style.backgroundColor = signalGreen
+					}
+				}
+				
+				var ddd2 = document.getElementById("time" + (j + 1) + destkey);
+				if (ddd2) {
+					ddd2.innerHTML = arr.tl[j]; 
+				}			
+				var ddd3 = document.getElementById("clip"+(j+1)+destkey);
+				if (ddd3) {
+					ddd3.innerHTML=arr.cp[j]; 
+				}			
+				var ddd4=document.getElementById("date"+(j+1)+destkey);
+				if (ddd4) {
+					var d = new Date();
+					d.setTime(1000 * Number(arr.tm[j]));
+					ddd4.innerHTML = formatter.format(d);
+				}			
+			}
+		}
+		else {
+			if(ggg) {
+				ggg.style.backgroundColor="#FF0000";
+				ggg.style.color="#FFFFFF";
+			}
+			if (sStName) {
+				sStName.innerHTML="Нет связи " + arr.timeout.toFixed(0) + " сек.";
+			}
+
+			for (j = 0; j < 16; j++) {
+				var ddd = document.getElementById("status" + (j + 1) + destkey);
+				if (ddd) {
+					ddd.innerHTML = "timeout"; 
+					ddd.style.backgroundColor = "#FF0000";
+					ddd.style.color = "#FFFFFF";
+				}
+				else {
+					break;
+				}
+			}
+		}
+//	 } 
+		
+		//console.log(arr);
+		if(arr.sd) {
+			//console.log(arr.sd);
+			var sdArr = JSON.parse(arr.sd)
+			//console.log(sdArr);
+			for (cnum in sdArr) {
+				var val = sdArr[cnum]; // channel #
+				var sdata = JSON.parse(val);
+				//console.log(val);
+				//var noError = true;
+				//if((cnum == 3)) {
+					//console.log("---");
+					//console.log(noError);
+					//console.log(cnum);
+				//}
+				//console.log(val);
+					
+				for (sVar in sdata) {
+					noError = true;
+					var dVal = sdata[sVar]; // data for today/tomorrow schedules
+					var sres = JSON.parse(dVal);
+					// sched10KEYID
+					var elKey = "sched" + cnum + sVar + destkey;
+					//console.log(elKey);
+					 var sEl = document.getElementById(elKey);
+					 var sElPar = sEl.parentElement;
+					//console.log(sElPar);
+					if (sEl && sElPar) {
+						var text = ""
+
+						if(sres.impres) {
+							//console.log(sres.impres);							
+							var resData = JSON.parse(sres.impres);
+							if(resData && (resData[0].et == 0)) {
+									//console.log(resData[0].et);
+								text = "OK";
+								sElPar.style.backgroundColor = signalGreen;
+								// add date/time to cell
+								if(resData[0].st) {
+									var dtl = resData[0].st.split('_');
+									if(dtl[0] && dtl[1]) {
+										dl = dtl[0].split('/');
+										tl = dtl[1].split(':');
+										text = text + " (" + dl[0] + "/" + dl[1] + " " + tl[0] + ":" + tl[1] + ":" + tl[2] + ")";
+									}
+								}
+							}
+							else {
+								text = "Ошибка " + resData[0].inf;
+								sElPar.style.backgroundColor = signalRed;
+								// add date/time to cell
+								if(resData[0].st) {
+									var dtl = resData[0].st.split('_');
+									if(dtl[0] && dtl[1]) {
+										dl = dtl[0].split('/');
+										tl = dtl[1].split(':');
+										text = text + " (" + dl[0] + "/" + dl[1] + " " + tl[0] + ":" + tl[1] + ":" + tl[2] + ")";
+									}
+								}
+							}
+						}
+						else { // nodata about imported schedule
+							//text = text + "Нет данных";
+							text = "Нет данных";
+							if(sVar == 0) { // it's emergency for today and warning for tomorrow
+								sElPar.style.backgroundColor = signalRed;
+							}
+							else {
+								sElPar.style.backgroundColor = signalYellow;
+							}
+						}
+						sEl.innerHTML = text;
+					}
+				}
+			}
+			
+		}
+	}
+} 
+};
+
+xmlhttp.open("GET",url,true); 
+xmlhttp.setRequestHeader("If-Modified-Since", "Thu, 1 Jan 1970 00:00:00 GMT"); 
+xmlhttp.setRequestHeader("Cache-Control", "no-cache"); 
+xmlhttp.responseType='json';
+xmlhttp.send("");  
+}
+ 
+function UpdateAllStatus() {
+  if (allkeys.length>0) {
+	//console.log(allkeys[flip % allkeys.length]);
+    loadXMLDoc('/getstatus?id=' + allkeys[flip % allkeys.length]);
+		flip = flip + 1;
+  }
+}
+
+function loadXMLSettings(url) {
+	if (xmlhttpsettings == null) {
+		if (window.XMLHttpRequest) {
+			xmlhttpsettings = new XMLHttpRequest();
+		}
+		else {
+			xmlhttpsettings = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+	}
+
+	xmlhttpsettings.onreadystatechange = function() {
+		if ((xmlhttpsettings.readyState == 4) && (xmlhttpsettings.status==200)) { 
+			var arr = xmlhttpsettings.response; 
+			if (arr == null) return;
+			var channels = arr.chs;
+			if (channels) {
+				var jsonData = JSON.parse(channels);
+				for (var i = 0; i < jsonData.length; i++) {
+					var val = jsonData[i];
+					if(val.id && val.settings) {
+						var jsonSettingsData = JSON.parse(val.settings);
+						if(jsonSettingsData.winbefore) {
+							winbefore[val.id - 1] = jsonSettingsData.winbefore;
+						}
+						if(jsonSettingsData.winafter) {
+							winafter[val.id - 1] = jsonSettingsData.winafter;
+						}
+					}
+					var sCh = document.getElementById("ch" + val.id + "title");
+					if (sCh) {
+						sCh.innerHTML = "<a href=\"/channel/?" + val.id + "\">" + val.title + "</a>"
+					}
+				}
+			}
+		} 
+	};
+
+	xmlhttpsettings.open("GET", url, true);
+	xmlhttpsettings.setRequestHeader("Cache-Control", "no-cache"); 
+	xmlhttpsettings.responseType='json';
+	xmlhttpsettings.send("");  
+}
+
+// pull all anchors for parsing (for "start anchor" button)
+var xmlAllAnchors = null;
+var allAnchors = []; // array of anchor for all channels
+function loadAllAnchors(url) {
+	if (xmlAllAnchors == null) {
+		if (window.XMLHttpRequest) {
+			xmlAllAnchors = new XMLHttpRequest();
+		}
+		else {
+			xmlAllAnchors = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+	}
+
+	xmlAllAnchors.onreadystatechange = function() {
+		//console.log("xmlAllAnchors" + xmlAllAnchors.readyState);
+		if ((xmlAllAnchors.readyState == 4) && (xmlAllAnchors.status==200)) {
+			allAnchors = [];
+			var arr = xmlAllAnchors.response;
+			if(arr == null) return;
+			for (j = 1; j <= 4; j++) {
+				var items = [];
+				//console.log(j);
+				var anchors = arr[j];
+				if (anchors) {
+					var jsonData = JSON.parse(anchors);
+					for (var i = 0; i < jsonData.length; i++) {
+						var item = [];
+						//item = jsonData[i].s_name;
+						item.name = jsonData[i].s_name;
+						var tm = jsonData[i].s_start.split('.');
+						item.start = tm[0];
+						
+						items[i] = item;
+					}
+				}
+				allAnchors[j] = items;
+			}
+			//console.log(allAnchors);
+		} 
+	};
+
+	xmlAllAnchors.open("GET", url, true);
+	xmlAllAnchors.setRequestHeader("Cache-Control", "no-cache"); 
+	xmlAllAnchors.responseType='json';
+	xmlAllAnchors.send("");  
+}
+
+function UpdateSettings() {
+  loadXMLSettings('/getsettings');
+	var today = new Date();
+	//console.log(today.getFullYear() + '-' + ("0" + (today.getMonth()+1)).slice(-2) + '-' + ("0" + today.getDate()).slice(-2));
+  loadAllAnchors('/getallanchors?c=1,2,3,4&date=' + today.getFullYear() + '-' + ("0" + (today.getMonth()+1)).slice(-2) + '-' + ("0" + today.getDate()).slice(-2));
+}
+
+function CloneCmdTable() {
+//	var element = document.getElementById("Stations");
+	
+	var elTbl = document.getElementById("cmdtbl");
+	var x = elTbl.rows.length;
+	var raw = elTbl.rows[x - 1];
+	//console.log("raw:" + raw.innerHTML);
+  var aa = raw.innerHTML;
+  var bb = "";
+	elTbl.deleteRow(x - 1);
+	
+  for (i = 0; i < allkeys.length; i++) {
+    var newrow = elTbl.insertRow(x - 1);
+    var cc = aa.replace(/KEYID/g, allkeys[i], 'g');
+		newrow.innerHTML = cc;
+		newrow.id = allkeys[i];
+		//console.log("newrow.id:" + newrow.id);
+		x = x +1;
+  }
+}
+
+function CloneStatusTable() {
+  var aa = document.getElementById("statustbl").innerHTML; 
+  var bb = "";
+
+  for (i=0;i<allkeys.length; i++) {
+    var cc = aa.replace(/KEYID/g, allkeys[i], 'g');
+    bb = bb + cc; 
+  }
+  
+  if (allkeys.length > 0) {
+    document.getElementById("statustbl").innerHTML = bb;
+  }
+	else {
+    document.getElementById("statustbl").innerHTML = "<tr></tr>";
+  }
+}
+
+function checkTime(i) {
+  if (i < 10) {
+    i = "0" + i;
+  }
+  return i;
+}
+
+function initTime() {
+  var today = new Date();
+  var h = today.getHours();
+  var m = today.getMinutes();
+  var s = today.getSeconds();
+	
+  // add a zero in front of numbers<10
+  m = checkTime(m);
+  s = checkTime(s);
+	
+	var curtime = document.getElementById('curtime');
+	if(curtime) {
+		curtime.innerHTML = h + ":" + m + ":" + s;
+	}
+	else {
+		console.log("curtime is null");
+	}
+  t = setTimeout(function() { initTime() }, 500);
+
+	//if(promoBlocked == 1) return;
+	//console.log(promoBlocked);
+	for (i = 1; i <= 4; i++) {
+		//console.log(i);
+		starters[i] = '';
+		//var anchors = allAnchors[i];
+		var anchors = allBlocks[i];
+		//console.log(anchors);
+		if(!anchors) continue;
+		var timeTo = document.getElementById('ch' + i + 't');
+		var nameTo = document.getElementById('ch' + i + 'n');
+		var btnStart = document.getElementById('btn' + i);
+
+		// !!!
+		for (j = 0; j < anchors.length; j++) {
+			//console.log(anchors[j]);
+			//console.log(anchors);
+			var today = new Date();
+			//console.log(today.getFullYear() + '-' + ("0" + (today.getMonth()+1)).slice(-2) + '-' + ("0" + today.getDate()).slice(-2));
+			//var curdate = '2018-09-08'
+			var curdate = today.getFullYear() + '-' + ("0" + (today.getMonth()+1)).slice(-2) + '-' + ("0" + today.getDate()).slice(-2);
+			//var cday = dateControl.value.split('-');
+			var cday = curdate.split('-');
+			//console.log(cday);
+			var ctime = anchors[j].time.split(':');
+			//console.log(anchors[j].time);
+			
+			var itemTime = new Date(cday[0], cday[1] - 1, cday[2], ctime[0], ctime[1], ctime[2]);
+			//var itmeTimeName = ctime[0], ctime[1], ctime[2]
+			//..startplaybackfromtime ' + moment
+			//console.log(itemTime);
+			
+			var itemTime_ms = itemTime.getTime();
+			//console.log('times');
+			//console.log(itemTime_ms);
+			var now_ms      = today.getTime();
+			//console.log(now_ms);
+			
+			var timebefore = itemTime_ms - winbefore[i - 1]*1000;
+			var timeafter  = itemTime_ms + winafter[i - 1]*1000;
+			//console.log(timebefore);
+			//console.log(now_ms);
+			//console.log(timeafter);
+			var cellMarked = false;
+			if((timebefore < now_ms) && (now_ms < timeafter)) {
+				var marker = "d_" + i + "_" + anchors[j].time;
+				//console.log(marker);
+				var divEl = document.getElementById(marker);
+				//console.log(divEl);
+				if(divEl) {
+					divEl.style.fontWeight = "bold";
+					divEl.style.color = "black";
+					cellMarked = true;
+				}
+			}
+			
+			<!-- var nWBefore_ms = nWBefore * 1000; -->
+			var nWAfter_ms  = 10000; // msecs
+			
+			if(itemTime_ms + nWAfter_ms < now_ms) {
+				if(!cellMarked) {
+					var marker = "d_" + i + "_" + anchors[j].time;
+					//console.log(marker);
+					var divEl = document.getElementById(marker);
+					if(divEl) {
+						divEl.style.fontWeight = "";
+						divEl.style.color = "black";
+					}
+				}
+				continue;
+			}
+			
+			//currentAnchor = anchors[j].start;
+		
+			var diff = 0;
+			var sSign = "";
+			//console.log(itemTime_ms);
+			//console.log(now_ms);
+			if(itemTime_ms < now_ms) {
+				sSign = "-";
+				diff = now_ms - itemTime_ms;
+			}
+			else {
+				diff = itemTime_ms - now_ms;
+			}
+			
+			bFound  = true;
+			//console.log(bFound);
+	//take out milliseconds
+			diff = diff/1000;
+			var tdiff = diff;
+			var seconds = Math.floor(diff % 60);
+			diff = diff/60; 
+			var minutes = Math.floor(diff % 60);
+			diff = diff/60; 
+			var hours = Math.floor(diff % 24);  
+			var days = Math.floor(diff/24);
+			
+			//var aMinute = 1 * 60 * 60 + 42 * 60;
+			//var aMinute = 1 * 60 * 60;
+			var aMinute = 10 * 60; // margin for the red letters
+			var setItRed = tdiff < aMinute;
+			
+			if(timeTo) {
+				timeTo.innerHTML = sSign + ("0" + hours).slice(-2) + ":" + ("0" + minutes).slice(-2) + ":" + ("0" + seconds).slice(-2);
+				//nameTo.innerHTML = anchors[j].name;
+				starters[i] = ("0" + ctime[0]).slice(-2) + ":" + ("0" + ctime[1]).slice(-2) + ":" + ("0" + ctime[2]).slice(-2);
+			}
+			if(setItRed) {
+				timeTo.style.color = "#ff0000";
+				timeTo.style.fontWeight = "bold";
+				//nameTo.style.color = "#ff0000";
+			}
+			else {
+				timeTo.style.color = "#000000";
+				timeTo.style.fontWeight = "";
+				//nameTo.style.color = "#000000";
+			}
+			break;			
+		}
+	}
+	//console.log(starters);
+}
+
+function loadLastEvents() {
+
+	//var lastTimeChecked = new Date();
+	
+	var lastmoment = lastTimeChecked.getFullYear() + ("0" + (lastTimeChecked.getMonth()+1)).slice(-2) + ("0" + lastTimeChecked.getDate()).slice(-2)  + ("0" + lastTimeChecked.getHours()).slice(-2) + ("0" + lastTimeChecked.getMinutes()).slice(-2)  + ("0" + lastTimeChecked.getSeconds()).slice(-2);
+	//console.log(lastmoment);
+	
+	lastTimeChecked = new Date();
+	//console.log(location.search);
+	
+	loadLastEventsInfo('/gettriggeredblocks?' + keys+ "&after=" + lastmoment);
+}
+
+var xmlEventsInfo = null;
+
+function loadLastEventsInfo(url) {
+	//console.log(url);
+	//return;
+	
+	if (xmlEventsInfo == null) {
+		if (window.XMLHttpRequest) {
+			xmlEventsInfo = new XMLHttpRequest();
+		}
+		else {
+			xmlEventsInfo = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+	}
+
+	xmlEventsInfo.onreadystatechange = function() {
+		//console.log("xmlAllAnchors" + xmlAllAnchors.readyState);
+		//console.log("xmlAllAnchors" + xmlAllAnchors.readyState);
+		//console.log(xmlEventsInfo);
+		if ((xmlEventsInfo.readyState == 4) && (xmlEventsInfo.status==200)) {
+			
+			var arr = xmlEventsInfo.response;
+			if(arr == null) return;
+			//console.log(arr);
+			//return;
+			
+			for(chanNum in arr) {
+				var charr = arr[chanNum];
+				//console.log(chanNum);
+				//console.log(charr);
+				//console.log(barr.length);
+				//continue;
+				//return;
+				
+				for(dKey in charr) {
+					var blocks = charr[dKey];
+					//allBlocks[chanNum] = [];
+					//console.log(blocks);
+
+					var blockArr = JSON.parse(blocks)
+					//console.log(blockArr);
+					//console.log(blockArr.length);
+					//continue;
+					
+					//if((blockArr != null) && (blockArr.length)) {
+					if(blockArr && blockArr.length) {
+						for (var i = 0; i < blockArr.length; i++) {
+							var block = blockArr[i];
+							//console.log(chanNum);
+							//console.log(dKey);
+							//console.log(block);
+							
+							var logTime    = block.lt;
+							var schedTime  = block.st.substring(0, 8);
+							var actionCode = block.ac;
+							//if(chanNum == 3) {
+							// console.log(logTime);
+							// console.log(schedTime);
+							// console.log(actionCode);
+							//}
+							if((actionCode == acBlockStarted) || (actionCode == acBlockStartedWeb) || (actionCode == acSpacebarPressed)) {
+								// global cell
+								var marker = "d_" + chanNum + "_" + schedTime;
+								//console.log(marker);
+								var divEl = document.getElementById(marker);
+								if(divEl) {
+									divEl.style.fontWeight = "bold";
+									divEl.style.color = "green";
+								}
+								
+								// channel cell 
+								marker = "d_" + dKey +"_"+ chanNum+"_" + schedTime;
+								//console.log(marker);
+								divEl = document.getElementById(marker);
+								if(divEl) {
+									divEl.style.fontWeight = "bold";
+									divEl.style.color = "green";
+								}
+							}
+							else if ((actionCode == acStopPalyback) || (actionCode == acStopAnchorTriggered)  || (actionCode == acEscapePressed)) { // clear all blocks
+								// global cell
+								var marker = "ch"+ chanNum + "allblocks";
+								//console.log(marker);
+								var divEl = document.getElementById(marker);
+								if(divEl) {
+									var c = divEl.childNodes;
+									for(var jj=0;jj<c.length;jj++) {
+										//console.log(c[i]);
+										c[jj].style.fontWeight = "normal";
+										c[jj].style.color = "black";
+									}
+								}
+								
+								// station cell
+								marker = "b" + chanNum + "_"  + dKey;
+								//console.log(marker);
+								divEl = document.getElementById(marker);
+								if(divEl) {
+									var c = divEl.childNodes;
+									for(var jj=0;jj<c.length;jj++) {
+										//console.log(c[i]);
+										c[jj].style.fontWeight = "normal";
+										c[jj].style.color = "black";
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		} 
+	};
+
+	xmlEventsInfo.open("GET", url, true);
+	xmlEventsInfo.setRequestHeader("Cache-Control", "no-cache"); 
+	xmlEventsInfo.responseType='json';
+	xmlEventsInfo.send("");  
+}
+
+// pull all anchors for parsing (for "start anchor" button)
+var xmlBlockInfo = null;
+var allBlocks = [];
+
+function loadBlocksInfo(url) {
+	//console.log(url);
+	//console.log("here!");
+	//return;
+	if (xmlBlockInfo == null) {
+		if (window.XMLHttpRequest) {
+			xmlBlockInfo = new XMLHttpRequest();
+		}
+		else {
+			xmlBlockInfo = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+	}
+
+	xmlBlockInfo.onreadystatechange = function() {
+		//console.log("xmlAllAnchors" + xmlAllAnchors.readyState);
+		//console.log(xmlBlockInfo);
+		if ((xmlBlockInfo.readyState == 4) && (xmlBlockInfo.status==200)) {
+			
+			var arr = xmlBlockInfo.response;
+			//console.log(arr);
+			if(arr == null) return;
+			for (var i = 1; i <= 4; i++) {
+				allBlocks[i] = [];
+			}
+			
+			for(dKey in arr) {
+				var charr = arr[dKey];
+				//console.log(dKey);
+				//console.log(charr);
+				//console.log(barr.length);
+				
+				for(chanNum in charr) {
+					var blocks = charr[chanNum];
+					//allBlocks[chanNum] = [];
+					//console.log(chanNum);
+					
+					var blockArr = JSON.parse(blocks)
+					//console.log(blockArr);
+					
+					if((blockArr != null) && (blockArr.length)) {
+						for (var i = 0; i < blockArr.length; i++) {
+							var block = blockArr[i];
+							var startTime = block.s_start.substring(0, 8);
+							var blockName = block.s_name.substring(0, 15);
+
+							// looking for time
+							var found = false;
+							//if(chanNum == 4) {
+							//	console.log(allBlocks[chanNum]);
+							//}
+							
+							//console.log(allBlocks[chanNum].length);
+							for(var j = 0; j < allBlocks[chanNum].length; j++) {
+								//console.log(allBlocks[chanNum][j].time);
+								//console.log(allBlocks[chanNum][j].time);
+								if(allBlocks[chanNum][j].time == startTime) {
+									//console.log("found");
+									found = true;
+									break;
+								}
+							}
+							if(!found) {
+								var anchorToAdd = {};
+								anchorToAdd["time"] = startTime;
+								anchorToAdd["name"] = blockName;
+								//console.log(startTime);
+								allBlocks[chanNum].push(anchorToAdd);
+							}
+						}
+					}
+				}
+			}
+
+			//console.log(allBlocks);
+			for (var i = 1; i <= 4; i++) {
+				allBlocks[i].sort(function (a, b) {
+					var at = (parseInt(a.time.substring(0, 2), 10) * 60 + parseInt(a.time.substring(3, 5), 10)) * 60 + parseInt(a.time.substring(6, 8), 10);
+					var bt = (parseInt(b.time.substring(0, 2), 10) * 60 + parseInt(b.time.substring(3, 5), 10)) * 60 + parseInt(b.time.substring(6, 8), 10);
+					
+					if (at > bt) {
+						return 1;
+					}
+					if (at < bt) {
+						return -1;
+					}
+					return 0;
+				});
+			}
+			//console.log(allBlocks);
+			
+			// populate ALL ANCHORS cells
+			for (var i = 1; i <= 4; i++) {
+				for(var k = 0; k < allBlocks[i].length; k++) {
+					var allBlockCell = document.getElementById("ch" + i + "allblocks");
+					if(allBlockCell) {
+						//var cell = elRow.cells[chanNum];
+						//console.log(cell);
+						var startBlockTime = allBlocks[i][k].time;
+						var startBlockName = allBlocks[i][k].name;
+						
+						var marker = i + "_" + startBlockTime;
+						var divBegin = "<div id=\"d_" + marker + "\">";
+						//console.log(divBegin);
+						
+						//allBlockCell.innerHTML = allBlockCell.innerHTML + "<div>" + startTime + ": " + blockName +
+						allBlockCell.innerHTML = allBlockCell.innerHTML + divBegin + 
+						"<input type=\"button\" value=\"Старт\" OnClick=\"launchBlock(" + i + ",'" + startBlockTime + "'," + "0" + ")\"></input>" +
+						" " +
+						startBlockTime + ": " + startBlockName +
+						"</div>";
+						var divEl = document.getElementById("d_" + marker);
+						if(divEl) {
+							divEl.style.padding = "5px 0px";
+						}
+					}
+				}
+			}
+		} 
+	};
+
+	xmlBlockInfo.open("GET", url, true);
+	xmlBlockInfo.setRequestHeader("Cache-Control", "no-cache"); 
+	xmlBlockInfo.responseType='json';
+	xmlBlockInfo.send("");  
+}
+
+
+function initPage() {
+	initTime();
+	var dateControl = document.querySelector('input[type="date"]');
+	var dateControl = document.getElementById('curtime');
+	dateControl.value = new Date().toISOString().substring(0, 10);
+}
+
+function OnLoad() { 
+  var cmd = location.search;
+  cmd = cmd.replace("?", "");
+  allkeys = cmd.split(",");
+	
+	keys = "id=" + allkeys.join(',')
+	//console.log(keys);
+	
+	initPage();
+	
+	//PullChannelsNames(); - make it!
+
+  CloneCmdTable();
+  //CloneStatusTable();
+  //window.setInterval("UpdateAllStatus()", 1000 / (allkeys.length + 1));
+  window.setInterval("UpdateAllStatus()", 2000 / (allkeys.length + 1));
+	
+	UpdateSettings();
+	
+	var today = new Date();
+  loadBlocksInfo('/loadblocksinfo/?' + keys + '&date=' + today.getFullYear() + '-' + ("0" + (today.getMonth()+1)).slice(-2) + '-' + ("0" + today.getDate()).slice(-2));
+	
+  window.setInterval("UpdateSettings()", 5000);
+	
+  //window.setInterval("loadLastEvents()", 1000);
+  window.setInterval("loadLastEvents()", 2000);
+  window.setInterval("updateDelays()", 500);
+	
+}
+</script>
+</head>
+
+<body onload="OnLoad()">
+<form name="Form">
+<table id="cmdtbl" bgcolor="#E7E7E7" class="fixed">
+<tr>
+	<td>Время:</td>
+	<td colspan=1 id="curtime">&nbsp;&nbsp;:&nbsp;&nbsp;:&nbsp;&nbsp;</td>	
+  <td></td>
+  <td></td>
+	<td></td>
+</tr>
+<tr bgcolor="#b8f5f9">
+  <td>Каналы:</td>
+  <td id="ch1title">1</td>
+  <td id="ch2title">2</td>
+  <td id="ch3title">3</td>
+  <td id="ch4title">4</td>
+</tr>
+<tr>
+	<td></td>
+	<td id="ch1ctrl">
+		<input type="button" value="Region" OnClick="sendChannelCmd(1, 'startfromnearestanchor', 'region')"></input>
+		<input type="button" value="Text" OnClick="sendChannelCmd(1, 'startfromnearestanchor', 'text')"></input>		
+		<input type="button" value="Stop" OnClick="sendChannelCmd(1, 'stopplayback', '')"></input>
+	</td>
+	<td id="ch2ctrl">
+		<input type="button" value="Region" OnClick="sendChannelCmd(2, 'startfromnearestanchor', 'region')"></input>
+		<input type="button" value="Text" OnClick="sendChannelCmd(2, 'startfromnearestanchor', 'text')"></input>		
+		<input type="button" value="Stop" OnClick="sendChannelCmd(2, 'stopplayback', '')"></input>
+	</td>
+	<td id="ch3ctrl">
+		<input type="button" value="Region" OnClick="sendChannelCmd(3, 'startfromnearestanchor', 'region')"></input>
+		<input type="button" value="Text" OnClick="sendChannelCmd(3, 'startfromnearestanchor', 'text')"></input>		
+		<input type="button" value="Stop" OnClick="sendChannelCmd(3, 'stopplayback', '')"></input>
+	</td>
+	<td id="ch4ctrl">
+		<input type="button" value="Region" OnClick="sendChannelCmd(4, 'startfromnearestanchor', 'region')"></input>
+		<input type="button" value="Text" OnClick="sendChannelCmd(4, 'startfromnearestanchor', 'text')"></input>		
+		<input type="button" value="Stop" OnClick="sendChannelCmd(4, 'stopplayback', '')"></input>
+	</td>
+</tr>
+<tr>
+	<td>Следующий блок:</td>
+  <!-- <td id="ch1nb"><span id="ch1t"> <span/><input type="button" value="Stop" OnClick="PostChannelURL('/sendcmd?id=', 2, 'stopplayback')"></input></td> -->
+	<td id="ch1nb"><p id="ch1t">&nbsp;&nbsp;:&nbsp;&nbsp;:&nbsp;&nbsp;</p></td>
+	<td id="ch2nb"><p id="ch2t">&nbsp;&nbsp;:&nbsp;&nbsp;:&nbsp;&nbsp;</p></td>
+	<td id="ch3nb"><p id="ch3t">&nbsp;&nbsp;:&nbsp;&nbsp;:&nbsp;&nbsp;</p></td>
+	<td id="ch4nb"><p id="ch4t">&nbsp;&nbsp;:&nbsp;&nbsp;:&nbsp;&nbsp;</p></td>
+</tr>
+<tr>
+	<td>Блоки:</td>
+	<td id="ch1allblocks" style="text-align:left;vertical-align:top;"></td>
+	<td id="ch2allblocks" style="text-align:left;vertical-align:top;"></td>
+	<td id="ch3allblocks" style="text-align:left;vertical-align:top;"></td>
+	<td id="ch4allblocks" style="text-align:left;vertical-align:top;"></td>
+</tr>
+<tr id = "Stations">
+	<td colspan=5  bgcolor="#b8f5f9">Станции</td>
+</tr>
+<tr id="KEYID">
+	<td style="vertical-align:top;">
+		<table>
+			<tbody>
+				<tr bgcolor="#b8f5f9">
+					<td style="text-align:left;"><a href="/?KEYID" target="_blank"> KEYID </a></td>
+					<td id="stnameKEYID" style="text-align:left;">-</td>
+				</tr>
+				<tr>
+					<td style="text-align:left;">ЦПУ:</td>
+					<td id="cpuKEYID" style="text-align:left;">-</td>
+				</tr>
+				<tr>
+					<td style="text-align:left;"><a target="_blank" href="/up/?id=KEYID">Скачивать:</a></td>
+					<td id="todwldKEYID" style="text-align:left;">0,00 Mb</td>
+				</tr>
+				<tr>
+					<td style="text-align:left;">Диск:</td>
+					<td id="fsKEYID" style="text-align:left;">-</td>
+				</tr>
+				<!-- <tr> -->
+					<!-- <td style="text-align:left;">Температура:</td> -->
+					<!-- <td style="text-align:left;">44,2&deg;С</td> -->
+				<!-- </tr> -->
+			</tbody>
+		</table>
+	</td>
+  <td>
+		<div>
+		<span id="status1KEYID">?????</span><br>
+		<span id="time1KEYID">?????</span><br>
+		<span id="clip1KEYID">?????</span><br>
+		<span id="date1KEYID">?????</span><br>
+		</div>
+			<table>
+			<tbody>
+				<tr bgcolor="#b8f5f9">
+					<td colspan="2"><a target="_blank" href="/sched_data/?id=KEYID">Расписания:</a></td>
+				</tr>
+				<tr>
+					<td>Сегодня:</td>
+					<td id="sched10KEYID">-</td>
+				</tr>
+				<tr>
+					<td>Завтра:</td>
+					<td id="sched11KEYID">-</td>
+				</tr>
+			</tbody>
+		</table>
+	</td>
+  <td>
+		<div>
+		<span id="status2KEYID">?????</span><br>
+		<span id="time2KEYID">?????</span><br>
+		<span id="clip2KEYID">?????</span><br>
+		<span id="date2KEYID">?????</span><br>
+		</div>
+			<table>
+			<tbody>
+				<tr bgcolor="#b8f5f9">
+					<td colspan="2"><a target="_blank" href="/sched_data/?id=KEYID">Расписания:</a></td>
+				</tr>
+				<tr>
+					<td>Сегодня:</td>
+					<td id="sched20KEYID">-</td>
+				</tr>
+				<tr>
+					<td>Завтра:</td>
+					<td id="sched21KEYID">-</td>
+				</tr>
+			</tbody>
+		</table>
+	</td>
+  <td>
+		<div>
+		<span id="status3KEYID">?????</span><br>
+		<span id="time3KEYID">?????</span><br>
+		<span id="clip3KEYID">?????</span><br>
+		<span id="date3KEYID">?????</span><br>
+		</div>
+			<table>
+			<tbody>
+				<tr bgcolor="#b8f5f9">
+					<td colspan="2"><a target="_blank" href="/sched_data/?id=KEYID">Расписания:</a></td>
+				</tr>
+				<tr>
+					<td>Сегодня:</td>
+					<td id="sched30KEYID">-</td>
+				</tr>
+				<tr>
+					<td>Завтра:</td>
+					<td id="sched31KEYID">-</td>
+				</tr>
+			</tbody>
+		</table>
+	</td>
+  <td>
+		<div>
+		<span id="status4KEYID">?????</span><br>
+		<span id="time4KEYID">?????</span><br>
+		<span id="clip4KEYID">?????</span><br>
+		<span id="date4KEYID">?????</span><br>
+		</div>
+			<table>
+			<tbody>
+				<tr bgcolor="#b8f5f9">
+					<td colspan="2"><a target="_blank" href="/sched_data/?id=KEYID">Расписания:</a></td>
+				</tr>
+				<tr>
+					<td>Сегодня:</td>
+					<td id="sched40KEYID">-</td>
+				</tr>
+				<tr>
+					<td>Завтра:</td>
+					<td id="sched41KEYID">-</td>
+				</tr>
+			</tbody>
+		</table>
+	</td>
+</tr>
+</table>
+</form>
+</body>
+</html>
